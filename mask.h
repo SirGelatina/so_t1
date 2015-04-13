@@ -115,22 +115,22 @@ int S_C
 #define desativa_IRWrite			0x7fff      // 0111 1111 1111 1111  usada com &
 
 // usadas para separar os sinais de controle. Atuam em SC.
-#define separa_RegDst		   0x0001	   // 0000 0000 0000 0001  usada com | 
-#define separa_RegWrite		   0x0002      // 0000 0000 0000 0010  usada com |
-#define separa_ALUSrcA    	   0x0004      // 0000 0000 0000 0100  usada com |
-#define separa_ALUSrcB0        0x0008      // 0000 0000 0000 1000  usada com |
-#define separa_ALUSrcB1        0x0010      // 0000 0000 0001 0000  usada com |
-#define separa_ALUOp0          0x0020      // 0000 0000 0010 0000  usada com |
-#define separa_ALUOp1          0x0040      // 0000 0000 0100 0000  usada com |
-#define separa_PCSource0       0x0080      // 0000 0000 1000 0000  usada com |
-#define separa_PCSource1       0x0100      // 0000 0001 0000 0000  usada com |
-#define separa_PCWriteCond     0x0200      // 0000 0010 0000 0000  usada com |
-#define separa_PCWrite         0x0400      // 0000 0100 0000 0000  usada com |
-#define separa_IorD            0x0800      // 0000 1000 0000 0000  usada com |
-#define separa_MemRead         0x1000      // 0001 0000 0000 0000  usada com |
-#define separa_MemWrite        0x2000      // 0010 0000 0000 0000  usada com |
-#define separa_MemtoReg        0x4000      // 0100 0000 0000 0000  usada com |
-#define separa_IRWrite         0x8000      // 1000 0000 0000 0000  usada com |
+#define separa_RegDst		   0x0001	   // 0000 0000 0000 0001  usada com &
+#define separa_RegWrite		   0x0002      // 0000 0000 0000 0010  usada com &
+#define separa_ALUSrcA    	   0x0004      // 0000 0000 0000 0100  usada com &
+#define separa_ALUSrcB0        0x0008      // 0000 0000 0000 1000  usada com &
+#define separa_ALUSrcB1        0x0010      // 0000 0000 0001 0000  usada com &
+#define separa_ALUOp0          0x0020      // 0000 0000 0010 0000  usada com &
+#define separa_ALUOp1          0x0040      // 0000 0000 0100 0000  usada com &
+#define separa_PCSource0       0x0080      // 0000 0000 1000 0000  usada com &
+#define separa_PCSource1       0x0100      // 0000 0001 0000 0000  usada com &
+#define separa_PCWriteCond     0x0200      // 0000 0010 0000 0000  usada com &
+#define separa_PCWrite         0x0400      // 0000 0100 0000 0000  usada com &
+#define separa_IorD            0x0800      // 0000 1000 0000 0000  usada com &
+#define separa_MemRead         0x1000      // 0001 0000 0000 0000  usada com &
+#define separa_MemWrite        0x2000      // 0010 0000 0000 0000  usada com &
+#define separa_MemtoReg        0x4000      // 0100 0000 0000 0000  usada com &
+#define separa_IRWrite         0x8000      // 1000 0000 0000 0000  usada com &
 
 // controle de sequenciamento explicito para controle microprogramado
 #define sequencia   0x00030000
