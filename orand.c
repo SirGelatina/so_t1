@@ -1,3 +1,5 @@
+#include "header.h"
+
 typedef struct or_and{
 
 	int *input1, *input2;
@@ -9,7 +11,7 @@ Or_and or
 Or_and and;
 
 or->input1 = ;
-or->input2 = and.output;
+or->input2 = &and.output;
 
 and->input1 = ;
 and->input2 = ;

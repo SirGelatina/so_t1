@@ -1,3 +1,5 @@
+#include "header.h"
+
 typedef struct mux{
 
 	// Input
