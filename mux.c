@@ -11,8 +11,6 @@ typedef struct mux{
 
 }Mux;
 
-Mux mux1, mux2, mux3, mux4, mux5, mux6;
-
 /*
 Functions parameters: 
 	0x0000, separa_IorD, mux1 

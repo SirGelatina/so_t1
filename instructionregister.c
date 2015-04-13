@@ -10,8 +10,6 @@ typedef struct instruction_register{
 
 }Instruction_register;
 
-Instruction_register ir;
-
 void function_instruction_register(){
 
 	ir->input_instruction = ;
