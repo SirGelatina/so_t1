@@ -1,6 +1,6 @@
 #include "header.h"
 
-typedef struct memory{
+struct memory{
 	int * Address;
 	int * WriteData;
 
@@ -10,9 +10,9 @@ typedef struct memory{
 	mutex WriteData_m;
 
 	int MemData;
-} Memory;
+};
 
-Memory ram;
+Memory memory;
 
 void function_memory(){
 
@@ -20,5 +20,7 @@ void function_memory(){
 
 	while(1){
 
+
+		pthread_barrier_wait(&clocksync)
 	}
 }

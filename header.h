@@ -1,5 +1,7 @@
 #include "mask.h"
 
+#define THREAD_NUMBER 20
+
 typedef int semaphore;
 typedef int mutex;
 
@@ -11,7 +13,7 @@ extern pthread_barrier_t clocksync;
 
 typedef struct memory Memory;
 
-extern Memory ram;
+extern Memory memory;
 
 void function_memory();
 
