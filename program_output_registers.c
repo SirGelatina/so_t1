@@ -14,11 +14,11 @@ void function_register_output_table(){
 
 	printf("\n");
 	printf(" \033[22;34m                      Conteudo dos Registradores de Controle\n");	
-	printf("                              ||     PC     | %d     ||\n", fileReg.reg[32]);
-	printf("                              ||     IR     | %d     ||\n", fileReg.reg[33]); 
-	printf(" 			      ||     MDR    | %d     ||\n", fileReg.reg[34]);
-	printf(" 		              ||     A      | %d     ||\n", fileReg.reg[35]);
-	printf(" 			      ||     B      | %d     ||\n", fileReg.reg[36]);
-	printf(" 			      ||     ALUOut | %d     ||\n", fileReg.reg[37]);
+	printf("                              ||     PC     | %d     ||\n", PC.output);
+	printf("                              ||     IR     | %d     ||\n", MemData); 
+	printf(" 			      ||     MDR    | %d     ||\n", MDR.output);
+	printf(" 		              ||     A      | %d     ||\n", A.output);
+	printf(" 			      ||     B      | %d     ||\n", B.output);
+	printf(" 			      ||     ALUOut | %d     ||\n", ALUOut.output);
 	printf("\033[22;30m\n");
 }
