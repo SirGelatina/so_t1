@@ -13,12 +13,12 @@ void function_register_output_table(){
 	
 
 	printf("\n");
-	printf(" \033[22;34m                      Conteudo dos Registradores de Controle\n");	
+	printf(" \033[22;34m                    Conteudo dos Registradores de Controle\n");	
 	printf("                              ||     PC     | %d     ||\n", PC.output);
 	printf("                              ||     IR     | %d     ||\n", MemData); 
-	printf(" 			      ||     MDR    | %d     ||\n", MDR.output);
-	printf(" 		              ||     A      | %d     ||\n", A.output);
-	printf(" 			      ||     B      | %d     ||\n", B.output);
-	printf(" 			      ||     ALUOut | %d     ||\n", ALUOut.output);
+	printf(" 			      			  ||     MDR    | %d     ||\n", MDR.output);
+	printf(" 		                      ||     A      | %d     ||\n", A.output);
+	printf(" 			                  ||     B      | %d     ||\n", B.output);
+	printf(" 			                  ||     ALUOut | %d     ||\n", ALUOut.output);
 	printf("\033[22;30m\n");
 }

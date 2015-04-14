@@ -3,7 +3,7 @@
 typedef struct instruction_register{
 
 	// Input
-	int *input_instruction, *input_SC;
+	int *input_instruction;
 
 	// Output
 	int output_31_26, output_25_21, output_25_0, output_20_16, output_15_0, output_15_11, output_5_0;
@@ -18,7 +18,6 @@ Instruction_register IR;
 void function_instruction_register(){
 
 	IR.input_instruction = &memory.MemData;
-	IR.input_SC = &;
 
 	pthread_barrier_wait(&clocksync);
 
@@ -27,7 +26,7 @@ void function_instruction_register(){
 		sem_wait(&IR.input_instruction);
 
 		// If IRWrite == 1
-		if(IR.input_SC & separa_IRWrite != 0){
+		if(controlunit.ControlBits & separa_IRWrite != 0){
 			IR.output_31_26 = (IR.input_instruction) >> 26;
 			IR.output_25_21 = (IR.input_instruction & separa_rs) >> 21;
 			IR.output_25_0  = (IR.input_instruction & separa_endereco_jump);

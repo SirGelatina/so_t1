@@ -4,7 +4,6 @@ typedef struct mux{
 
 	// Input
 	int **input;
-	int *SC;
 
 	// Output
 	int output;
@@ -55,10 +54,10 @@ void function_mux (Mux *mux){
 		//   1    |    0    |     10
 		//   1    |    1    |     11
 
-		if(bit1 == 0 && bit0 == 0) mux->output = mux->input_0;
-		if(bit1 == 0 && bit0 == 1) mux->output = mux->input_1;
-		if(bit1 == 1 && bit0 == 0) mux->output = mux->input_2;
-		if(bit1 == 1 && bit0 == 1) mux->output = mux->input_3;
+		if(bit1 == 0 && bit0 == 0) mux->output = mux->input[0];
+		if(bit1 == 0 && bit0 == 1) mux->output = mux->input[1];
+		if(bit1 == 1 && bit0 == 0) mux->output = mux->input[2];
+		if(bit1 == 1 && bit0 == 1) mux->output = mux->input[3];
 
 		for(i=0; i<(mux->output_N); i++)
 			sem_post(&mux.output_m[i]);		
