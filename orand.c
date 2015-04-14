@@ -34,7 +34,7 @@ void function_or_and(){
 
 		OR_AND.output = (OR_AND.zero & OR_AND.PCWriteCond) | OR_AND.PCWrite;
 
-		sem_post(&PC.SC);
+		sem_post(&PC.SC_m);
 
 		pthread_barrier_wait(&clocksync);
 
