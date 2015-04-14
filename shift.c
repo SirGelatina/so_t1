@@ -4,6 +4,8 @@
 typedef struct shift{
 	int * input;
 
+	mutex input_m;
+
 	int output;
 
 }Shift;

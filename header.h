@@ -22,6 +22,8 @@ typedef struct alu Alu;
 typedef struct alu_control Alu_control;
 typedef struct shift Shift;
 typedef struct pc_register Pc_register;
+typedef struct controlunit ControlUnit;
+typedef struct signalextend SignalExtend;
 
 extern Memory memory;
 extern Instruction_register IR;
@@ -34,6 +36,8 @@ extern Alu_control ALUControl;
 extern Shift shift_one;
 extern Shift shift_two;
 extern PC_register PC;
+extern ControlUnit controlunit;
+extern SignalExtend extend;
 
 void function_memory();
 void function_instruction_register();
@@ -45,5 +49,8 @@ void function_alu();
 void function_alucontrol();
 void function_shift();
 void function_pc_register();
+void function_memory();
+void function_control_unit();
+void function_signalextend();
 
 //comment
