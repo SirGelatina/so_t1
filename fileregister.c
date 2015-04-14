@@ -12,6 +12,8 @@ typedef struct file_register{
 	int reg[32];
 }File_register;
 
+File_register fileRegister;
+
 /*------------------------------------------------------------------------------------------------*/ 
 //	         Correspodência entre registradores e posicao no vetor 'reg' de File_register     
 //

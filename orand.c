@@ -7,6 +7,8 @@ typedef struct or_and{
 
 }Or_and;
 
+Or_and OR, AND;
+
 /*
 Functions parameters: 
 	flag = 0 -> OR 

@@ -10,6 +10,8 @@ typedef struct pc_register{
 
 }PC_register;
 
+PC_register PC;
+
 void function_pc_register(){
 
 	// Inicialização de PC
