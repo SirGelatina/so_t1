@@ -25,6 +25,8 @@ void function_control_register(Control_register *r, int *output){
 
 		r->output = r->input;
 
+
+
 		pthread_barrier_wait(&clocksync)
 	}
 }

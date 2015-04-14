@@ -9,6 +9,14 @@ typedef struct mux{
 	// Output
 	int output;
 
+	// Auxiliares
+	int mask1, mask0;
+	int input_N, output_N;
+
+	// Semaforos
+	mutex * input_m;
+	mutex * output_m[];
+
 }Mux;
 
 Mux mux1, mux2, mux3, mux4, mux5, mux6;
@@ -24,24 +32,21 @@ Functions parameters:
 
 */
 
-void function_mux (int mask1, int mask0, Mux *mux, int *output[]){
-
-	mux->input[0] = &output[0];
-	mux->input[1] = &output[1];
-	mux->input[2] = &output[2];
-	mux->input[3] = &output[3];
-	mux->SC = ;
-
-	pthread_barrier_wait(&clocksync);
+void function_mux (Mux *mux){
 
 	while(1){
 
+		int i;
+
+		for(i=0; i<(mux->input_N); i++)
+			sem_wait(&mux.input_m[i]);
+
 		int bit1, bit0;
 
-		if(mask1 & mux->SC == 0) bit1 = 0;
+		if(mux->mask1 & mux->SC == 0) bit1 = 0;
 		else bit1 = 1;
 
-		if(mask0 & mux->SC == 0) bit0 = 0;
+		if(mux->mask0 & mux->SC == 0) bit0 = 0;
 		else bit0 = 1;
 
 		//  bit1  |   bit0  |  resultado
@@ -54,6 +59,9 @@ void function_mux (int mask1, int mask0, Mux *mux, int *output[]){
 		if(bit1 == 0 && bit0 == 1) mux->output = mux->input_1;
 		if(bit1 == 1 && bit0 == 0) mux->output = mux->input_2;
 		if(bit1 == 1 && bit0 == 1) mux->output = mux->input_3;
+
+		for(i=0; i<(mux->output_N); i++)
+			sem_post(&mux.output_m[i]);		
 
 		pthread_barrier_wait(&clocksync);
 
