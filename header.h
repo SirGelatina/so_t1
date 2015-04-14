@@ -21,17 +21,20 @@ typedef struct file_register File_register;
 typedef struct alu Alu;
 typedef struct alu_control Alu_control;
 typedef struct shift Shift;
+typedef struct pc_register Pc_register;
 
 extern Memory memory;
-extern Instruction_register ir;
+extern Instruction_register IR;
 extern Mux mux1, mux2, mux3, mux4, mux5, mux6;
 extern Or_and OR, AND;
-extern Control_register PC, MDR, A, B, ALUOut; // IR não está incluso, pois é tratado separadamente (instructionregister)
+// IR e PC não estão inclusos, pois são tratados separadamente (instructionregister.c e pc.c, respectivamente)
+extern Control_register PC, MDR, A, B, ALUOut; 
 extern File_register fileRegister;
 extern Alu ALU;
 extern Alu_control ALUControl;
 extern Shift shift_one;
 extern Shift shift_two;
+extern PC_register PC;
 
 void function_memory();
 void function_instruction_register();
@@ -42,5 +45,6 @@ void function_file_register();
 void function_alu();
 void function_alucontrol();
 void function_shift();
+void function_pc_register();
 
 //comment

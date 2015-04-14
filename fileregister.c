@@ -32,13 +32,13 @@ void function_file_register(){
 	int i;
 
 	for(i=0; i<32; i++){
-		x->reg[i] = 0;
+		fileRegister.reg[i] = 0;
 	}
 
-	fileRegister.readReg1 = &;
-	fileRegister.readReg2 = &;
-	fileRegister.writeReg = &;
-	fileRegister.writeData = &;	
+	fileRegister.readReg1 = &IR.output_25_21;
+	fileRegister.readReg2 = &IR.output_20_16;
+	fileRegister.writeReg = &mux2.output;
+	fileRegister.writeData = &mux3.output;	
 
 	pthread_barrier_wait(&clocksync);
 
@@ -49,8 +49,9 @@ void function_file_register(){
 		fileRegister.readData2 = fileRegister.reg[fileRegister.readReg2];
 		
 		fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
+
+		pthread_barrier_wait(&clocksync);
 	}
-	pthread_barrier_wait(&clocksync);
 }
 
 

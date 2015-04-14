@@ -12,22 +12,22 @@ typedef struct instruction_register{
 
 void function_instruction_register(){
 
-	ir.input_instruction = &;
-	ir.input_SC = &;
+	IR.input_instruction = &;
+	IR.input_SC = &;
 
 	pthread_barrier_wait(&clocksync);
 
 	while(1){
 
 		// If IRWrite == 1
-		if(ir->input_SC & separa_IRWrite != 0){
-			ir.output_31_26 = (ir.input_instruction) >> 26;
-			ir.output_25_21 = (ir.input_instruction & separa_rs) >> 21;
-			ir.output_25_0  = (ir.input_instruction & separa_endereco_jump);
-			ir.output_20_16 = (ir.input_instruction & separa_rt) >> 16;
-			ir.output_15_0  = (ir.input_instruction & separa_imediato;
-			ir.output_15_11 = (ir.input_instruction & separa_rd) >> 11;
-			ir.output_5_0   = (ir.input_instruction & separa_cfuncao);
+		if(IR.input_SC & separa_IRWrite != 0){
+			IR.output_31_26 = (IR.input_instruction) >> 26;
+			IR.output_25_21 = (IR.input_instruction & separa_rs) >> 21;
+			IR.output_25_0  = (IR.input_instruction & separa_endereco_jump);
+			IR.output_20_16 = (IR.input_instruction & separa_rt) >> 16;
+			IR.output_15_0  = (IR.input_instruction & separa_imediato;
+			IR.output_15_11 = (IR.input_instruction & separa_rd) >> 11;
+			IR.output_5_0   = (IR.input_instruction & separa_cfuncao);
 		}
 
 		pthread_barrier_wait(&clocksync);	
