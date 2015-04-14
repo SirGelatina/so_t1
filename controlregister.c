@@ -4,7 +4,8 @@
 typedef struct control_register{
 
 	int *input;
-    int output;	
+    	int output;
+	mutex *control_register_m; 	
 
 }Control_register;
 
@@ -12,13 +13,6 @@ typedef struct control_register{
 Control_register PC, MDR, A, B, ALUOut; 
 
 void function_control_register(Control_register *r, int *output){
-
-	// Inicialização dos registradores
-	r->output = NULL;
-
-	r->input = &output;
-	
-	pthread_barrier_wait(&clocksync);
 
 	// Execução da função
 	while(1){
