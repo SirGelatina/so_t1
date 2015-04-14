@@ -4,26 +4,32 @@
 typedef struct control_register{
 
 	int *input;
-       	int output;	
+	int *SC;
+    int output;	
+
 }Control_register;
 
-Control_register PC, MDR, A, B, ALUOut; // IR não está incluso, pois é tratado separadamente (instructionregister)
+void function_control_register(Control_register *r, int *output, int pcflag){
 
-void function_control_register(Control_register x){
-		
+	r->input = &output;
+
 	// Inicialização dos registradores
-	PC.input = &mux5.output; PC.output = 0;
-	MDR.input = &memory.MemData; MDR.output = NULL;
-	A.input = &fileRegister.readData1; A.output = NULL;
-	B.input = &fileRegister.readData2; B.output = 0;
-	ALUOut.input = &ALU.output; ALUOut.output = NULL;
+
+	// PC
+	if(pcflag == 1) r->output = 0;
+	// Outros registradores
+	else r->output = NULL
 	
 	pthread_barrier_wait(&clocksync);
 
 	// Execução da função
 	while(1){
 
-		x.output = &x.input;
+		if(pcflag == 1){ // O registrador eh PC
+			if(r->SC & separa_PCWrite != 0) // PC deve ver se vai ser atualizado
+				x->output = x->input;
+		}
+		else x->output = x->input;
 	}
 	pthread_barrier_wait(&clocksync)
 }
