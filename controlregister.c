@@ -6,13 +6,13 @@ typedef struct control_register{
 	int *input;
     	int output;
 	int n_output;
-	mutex *input_m;
-	mutex *output_m; 	
+	mutex input_m;
+	mutex *output_m[2]; 	
 
 }Control_register;
 
 // IR e PC não estão inclusos, pois são tratados separadamente (instructionregister.c e pc.c, respectivamente)
-Control_register PC, MDR, A, B, ALUOut; 
+Control_register MDR, A, B, ALUOut; 
 
 void function_control_register(Control_register *r){
 
