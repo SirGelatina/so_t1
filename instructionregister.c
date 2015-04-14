@@ -8,6 +8,7 @@ typedef struct instruction_register{
 	// Output
 	int output_31_26, output_25_21, output_25_0, output_20_16, output_15_0, output_15_11, output_5_0;
 
+	// Semaforo
 	mutex input_instruction_m;
 
 }Instruction_register;
@@ -16,7 +17,7 @@ Instruction_register IR;
 
 void function_instruction_register(){
 
-	IR.input_instruction = &;
+	IR.input_instruction = &memory.MemData;
 	IR.input_SC = &;
 
 	pthread_barrier_wait(&clocksync);
@@ -36,13 +37,10 @@ void function_instruction_register(){
 			IR.output_5_0   = (IR.input_instruction & separa_cfuncao);
 		}
 
-		sem_post(&IR.input_instruction);
-		sem_post(&IR.input_instruction);
-		sem_post(&IR.input_instruction);
-		sem_post(&IR.input_instruction);
-		sem_post(&IR.input_instruction);
-		sem_post(&IR.input_instruction);
-		sem_post(&IR.input_instruction);
+		sem_post(&...);
+		.
+		.
+		.
 
 		pthread_barrier_wait(&clocksync);	
 

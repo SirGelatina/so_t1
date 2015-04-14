@@ -6,7 +6,9 @@ typedef struct pc_register{
 
 	int *input;
 	int *SC;
-    int output;	
+        int output;
+	mutex input_m;
+	mutex output_m;	
 
 }PC_register;
 
@@ -24,8 +26,12 @@ void function_pc_register(){
 	// Execução da função
 	while(1){
 
+		sem_wait(&input_m);
+
 		if(PC.SC & separa_PCWrite != 0) // PC deve ver se vai ser atualizado
 			PC.output = PC.input;
+
+		sem_post(&output_m);
 
 		pthread_barrier_wait(&clocksync)
 	}
