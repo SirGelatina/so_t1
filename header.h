@@ -29,7 +29,7 @@ extern Memory memory;
 extern Instruction_register IR;
 extern Mux mux1, mux2, mux3, mux4, mux5, mux6;
 extern Or_and OR, AND;
-extern Control_register PC, MDR, A, B, ALUOut; 
+extern Control_register MDR, A, B, ALUOut; 
 extern File_register fileRegister;
 extern Alu ALU;
 extern Alu_control ALUControl;
