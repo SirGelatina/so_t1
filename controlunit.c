@@ -238,8 +238,6 @@ void function_controlunit(){
 	int CurrentState = STATE_instructionfetch;
 
 	while(1){
-		pthread_wait(&memory.op_m);
-
 		CurrentState = StateArray[CurrentState]();
 		
 		pthread_barrier_wait(&clocksync);
