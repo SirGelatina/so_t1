@@ -1,3 +1,5 @@
+#include <pthread.h>
+
 #include "mask.h"
 
 #define THREAD_NUMBER 20

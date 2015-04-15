@@ -96,5 +96,9 @@ int main(){
 	mux6.mask0 = separa_ALUSrcB0;
 	mux6.input_N = 4;
 	mux6.output_m = &ALU.input_mux_two_m;
+
+	
+
+	return 0;
 	
 }

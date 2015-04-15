@@ -41,7 +41,7 @@ void state_instructionfetch(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_registerfetch;
 }
@@ -58,7 +58,7 @@ void state_registerfetch(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	int opcode = *op;
 
@@ -90,7 +90,7 @@ void state_computeaddress(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	int opcode = *op;
 
@@ -115,7 +115,7 @@ void state_memoryaccess_read(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_memreadfinish;
 }
@@ -130,7 +130,7 @@ void state_memreadfinish(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -144,7 +144,7 @@ void state_memoryaccess_write(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -161,7 +161,7 @@ void state_execution(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_Rconclusion;
 }
@@ -176,7 +176,7 @@ void state_Rconclusion(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -196,7 +196,7 @@ void state_branchconclusion(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -211,7 +211,7 @@ void state_jumpconclusion(){
 	controlunit.ControlBits = controlbits;
 
 	pthread_barrier_wait(&controlsync);
-	pthread_wait(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
