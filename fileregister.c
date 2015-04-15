@@ -10,6 +10,10 @@ typedef struct file_register{
 	int readData1;
 	int readData2;
 	int reg[32];
+	mutex read_reg1_m;
+	mutex read_reg2_m;
+	mutex write_reg_m;
+	mutex write_data_m;
 }File_register;
 
 File_register fileRegister;
@@ -47,10 +51,18 @@ void function_file_register(){
 	// Execução da função
 	while(1){
 
+		sem_wait(&read_reg1_m);	
+		sem_wait(&read_reg2_m);
+		sem_wait(&write_reg_m);
+		sem_wait(&write_data_m);	
+
 		fileRegister.readData1 = fileRegister.reg[fileRegister.readReg1];
 		fileRegister.readData2 = fileRegister.reg[fileRegister.readReg2];
 		
 		fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
+
+		sem_post(&A.input_m);
+		sem_post(&B.input_m);
 
 		pthread_barrier_wait(&clocksync);
 	}
