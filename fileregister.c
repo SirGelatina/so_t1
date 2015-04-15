@@ -26,7 +26,7 @@ typedef struct file_register{
 File_register fileRegister;
 
 /*------------------------------------------------------------------------------------------------*/ 
-//	         Correspodência entre registradores e posicao no vetor 'reg' de File_register     
+//	         Correspondência entre registradores e posicao no vetor 'reg' de File_register     
 //
 //     ||     $zero | 0     ||     $t0   | 8     ||     $s0   | 16    ||     $t8   | 24    ||              
 //     ||     $at   | 1     ||     $t1   | 9     ||     $s1   | 17    ||     $t9   | 25    || 
