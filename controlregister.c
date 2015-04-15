@@ -4,7 +4,7 @@
 typedef struct control_register{
 
 	int *input;
-    	int output;
+    int output;
 	int n_output;	
 	mutex input_m;
 	mutex *output_m[2]; 	
