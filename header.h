@@ -1,6 +1,7 @@
 #include "mask.h"
 
 #define THREAD_NUMBER 20
+#define MEMSIZE 1024
 
 typedef int semaphore;
 typedef int mutex;
