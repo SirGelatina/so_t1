@@ -1,26 +1,44 @@
 #include "header.h"
 
-//Declarando a estrutura responsável pelo ALU
 typedef struct alu{
+
+	// Input
 	int * input_mux_one;
 	int * input_mux_two;
-	int * input_alu_control;
+	int * input_ALUControl;
 	
+	// Output
 	int output_alu_result;
 	int output_alu_zero;
 
+	// Mutex
+	mutex input_mux_one_m;
+	mutex input_mux_two_m;
+	mutex input_ALUControl_m;
+
 }Alu;
 
-//Declarando a variável que representará a unidade funcional
 Alu ALU;
 
-//Função responsável por controlar a unidade funcional
 void function_alu(){
+
+	// Ligacao das entradas dessa unidade funcional com as saidas de onde virao os dados
+	ALU.input_mux_one = &mux4.output;
+	ALU.input_mux_two = &mux6.output;
+	ALU.input_ALUControl = &ALUControl.output_alu;
 	
+	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
 	while(1){
-		switch(*y.input_alu_control){
+
+		// DOWN nos mutex da entrada
+		sem_wait(&ALU.input_mux_one_m);
+		sem_wait(&ALU.input_mux_two_m);
+		sem_wait(&ALU.input_ALUControl_m);
+
+		// Bits de controle da operacao do ALU
+		switch(ALU.input_ALUControl){ 
 			case 0:{	//AND
 				y.output_alu_result = (*y.input_mux_one) & (*y.input_mux_two);
 				if(y.output_alu_result == 0)
@@ -65,6 +83,12 @@ void function_alu(){
 				break;
 		}
 
+		// UP nos mutex de entrada das unidades que utilizam essas saidas
+		sem_post(&ALUOut.input_m);
+		sem_post(&OR_AND.zero_m);
+		sem_post(&mux5.input_m[0]);
+
+		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
 }

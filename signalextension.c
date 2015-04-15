@@ -1,22 +1,31 @@
 #include "header.h"
 
 struct signalextend{
+
+	// Input
 	int * input;
 
-	mutex input_m;
-
+	// Output
 	int output;
+
+	// Mutex
+	mutex input_m;
 }
 
 SignalExtend extend;
 
 void function_signalextend(){
+
+	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	extend.input = &IR.output_15_0;
 
+	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
 	while(1){
-		pthread_wait(&extend.input_m);
+		
+		// DOWN nos mutex da entrada
+		sem_wait(&extend.input_m);
 
 		int n = *extend.input;
 
@@ -25,9 +34,11 @@ void function_signalextend(){
 		else
 			extend.output = n & 0x0000ffff;
 
-		pthread_post(&shift_one.input_m);
-		pthread_post(&mux6.input_m[2]);
+		// UP nos mutex de entrada das unidades que utilizam essas saidas
+		sem_post(&shift_one.input_m);
+		sem_post(&mux6.input_m[2]);
 
+		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
 }

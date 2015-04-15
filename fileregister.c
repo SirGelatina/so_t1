@@ -1,19 +1,26 @@
 #include "header.h"
 
-/*---------------- BANCO DE REGISTRADORES ----------------*/
 typedef struct file_register{
 
+	// Input
 	int *readReg1;
 	int *readReg2;
 	int *writeReg;
 	int *writeData;
+
+	// Output
 	int readData1;
 	int readData2;
+
+	// Registradores armazenados
 	int reg[32];
+
+	// Mutex
 	mutex read_reg1_m;
 	mutex read_reg2_m;
 	mutex write_reg_m;
 	mutex write_data_m;
+
 }File_register;
 
 File_register fileRegister;
@@ -36,21 +43,21 @@ void function_file_register(){
 
 	// Inicialização dos registradores
 	int i;
-
-	for(i=0; i<32; i++){
+	for(i=0; i<32; i++)
 		fileRegister.reg[i] = 0;
-	}
 
+	// Ligacao das entradas dessa unidade funcional com as saidas de onde virao os dados
 	fileRegister.readReg1 = &IR.output_25_21;
 	fileRegister.readReg2 = &IR.output_20_16;
 	fileRegister.writeReg = &mux2.output;
 	fileRegister.writeData = &mux3.output;	
 
+	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
-	// Execução da função
 	while(1){
 
+		// DOWN nos mutex da entrada
 		sem_wait(&read_reg1_m);	
 		sem_wait(&read_reg2_m);
 		sem_wait(&write_reg_m);
@@ -61,9 +68,11 @@ void function_file_register(){
 		
 		fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
 
+		// UP nos mutex de entrada das unidades que utilizam essas saidas
 		sem_post(&A.input_m);
 		sem_post(&B.input_m);
 
+		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
 }

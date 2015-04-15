@@ -9,7 +9,7 @@ typedef struct or_and{
 	// Output
 	int output;
 
-	// Semaforos
+	// Mutex
 	mutex zero_m;
 
 }Or_and;
@@ -18,13 +18,16 @@ Or_and OR_AND;
 
 void function_or_and(){
 
+	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	OR_AND.zero = &ALU.output_alu_zero;
 
-	sem_wait(&OR_AND.zero_m);
-
+	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
 	while(1){
+
+		// DOWN nos mutex da entrada
+		sem_wait(&OR_AND.zero_m);
 
 		if (controlunit.ControlBits & separa_PCWriteCond == 0) OR_AND.PCWriteCond = 0;
 		else OR_AND.PCWriteCond = 1;
@@ -34,8 +37,10 @@ void function_or_and(){
 
 		OR_AND.output = (OR_AND.zero & OR_AND.PCWriteCond) | OR_AND.PCWrite;
 
+		// UP nos mutex de entrada das unidades que utilizam essas saidas
 		sem_post(&PC.SC_m);
 
+		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 
 	}
