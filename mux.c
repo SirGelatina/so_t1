@@ -21,13 +21,12 @@ typedef struct mux{
 Mux mux1, mux2, mux3, mux4, mux5, mux6;
 
 /*
-Functions parameters: 
-	0x0000, separa_IorD, mux1 
-	0x0000, separa_RegDst, mux2
-	0x0000, separa_MemtoReg, mux3 
-	0x0000, separa_ALUSrcA, mux4 
-	separa_ALUSrcB1, separa_ALUSrcB0, mux5
-	separa_PCSource1, separa_PCSource0, mux6
+	0x0000, separa_IorD - mux1 
+	0x0000, separa_RegDst - mux2
+	0x0000, separa_MemtoReg - mux3 
+	0x0000, separa_ALUSrcA - mux4 
+	separa_ALUSrcB1, separa_ALUSrcB0 - mux5
+	separa_PCSource1, separa_PCSource0 - mux6
 
 */
 
@@ -60,7 +59,7 @@ void function_mux (Mux *mux){
 		if(bit1 == 1 && bit0 == 1) mux->output = mux->input[3];
 
 		for(i=0; i<(mux->output_N); i++)
-			sem_post(&mux.output_m[i]);		
+			sem_post(&mux->output_m[i]);		
 
 		pthread_barrier_wait(&clocksync);
 

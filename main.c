@@ -16,5 +16,8 @@ int main(){
 	
 	// Mutexes
 
+	// Mux
+	mux1.input[0] = &PC.output;
+	mux1.input[1] = &ALUOut.output;
 	
 }
