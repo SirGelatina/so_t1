@@ -10,11 +10,11 @@ typedef struct mux{
 
 	// Auxiliares
 	int mask1, mask0;
-	int input_N, output_N;
+	int input_N;
 
 	// Semaforos
 	mutex * input_m;
-	mutex * output_m[];
+	mutex * output_m;
 
 }Mux;
 
@@ -57,8 +57,7 @@ void function_mux (Mux *mux){
 		if(bit1 == 1 && bit0 == 0) mux->output = mux->input[2];
 		if(bit1 == 1 && bit0 == 1) mux->output = mux->input[3];
 
-		for(i=0; i<(mux->output_N); i++)
-			sem_post(&mux->output_m[i]);		
+		sem_post(&mux->output_m);		
 
 		pthread_barrier_wait(&clocksync);
 

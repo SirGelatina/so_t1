@@ -23,7 +23,7 @@ void function_instruction_register(){
 
 	while(1){
 
-		sem_wait(&IR.input_instruction);
+		sem_wait(&IR.input_instruction_m);
 
 		// If IRWrite == 1
 		if(controlunit.ControlBits & separa_IRWrite != 0){
@@ -36,10 +36,14 @@ void function_instruction_register(){
 			IR.output_5_0   = (IR.input_instruction & separa_cfuncao);
 		}
 
-		sem_post(&...);
-		.
-		.
-		.
+		sem_post(&controlunit.output_5_0_m);
+		sem_post(&shift_two.input_m);
+		sem_post(&fileRegister.read_reg1_m);
+		sem_post(&fileRegister.read_reg2_m);
+		sem_post(&mux2.input_m[0]);
+		sem_post(&mux2.input_m[1]);
+		sem_post(&);
+		sem_post(&ALUControl.input_instruction_m);
 
 		pthread_barrier_wait(&clocksync);	
 
