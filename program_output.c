@@ -1,4 +1,4 @@
-void function_register_output_table(){
+void function_output_table(){
 
 	printf("\n");
 	printf(" \033[22;31m                        Conteudo do Banco de Registradores\n\n");	

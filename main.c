@@ -19,10 +19,14 @@ int main(){
 	MDR.output_m = (**pthread_mutex_t)malloc(1*(sizeof(*pthread_mutex_t)));
 	MDR.output_m[0] = &mux3.input_m[1];
 
+	pthread_mutex_init(&MDR.input_m, NULL);
+
 	A.input = &fileRegister.readData1;
 	A.n_output = 1;
 	A.output_m = (**pthread_mutex_t)malloc(1*(sizeof(*pthread_mutex_t)));
 	A.output_m[0] = &mux4.input_m[1];
+
+	pthread_mutex_init(&A.input_m, NULL);
 
 	B.input = &fileRegister.readData2;
 	B.n_output = 2;
@@ -30,11 +34,15 @@ int main(){
 	B.output_m[0] = &mux6.input_m[0];
 	B.output_m[1] = &memory.WriteData_m;
 
+	pthread_mutex_init(&B.input_m, NULL);
+
 	ALUOut.input = &ALU.output_alu_result;
  	ALUOut.n_output = 2;
  	ALUOut.output_m = (**pthread_mutex_t)malloc(2*(sizeof(*pthread_mutex_t)));
  	ALUOut.output_m[0] = &mux1.input_m[1];
  	ALUOut.output_m[1] = &mux5.input_m[1];
+
+	pthread_mutex_init(&ALUOut.input_m, NULL);
 
 
 	// Mux
@@ -60,7 +68,7 @@ int main(){
 
 	mux1.input_m = (*pthread_mutex_t)malloc(2*sizeof(pthread_mutex_t));
 	for(i=0; i<2; i++)
-		sem_init(&mux1.input_m[i], 0, 1);
+		pthread_mutex_init(&mux1.input_m[i], NULL);
 
 		/*	Inicializacao do Mux 2 	*/
 
@@ -74,7 +82,7 @@ int main(){
 	
 	mux2.input_m = (*pthread_mutex_t)malloc(2*sizeof(pthread_mutex_t));
 	for(i=0; i<2; i++)
-		sem_init(&mux2.input_m[i], 0, 1);
+		pthread_mutex_init(&mux2.input_m[i], NULL);
 
 		/*	Inicializacao do Mux 3	*/
 
@@ -88,7 +96,7 @@ int main(){
 	
 	mux3.input_m = (*pthread_mutex_t)malloc(2*sizeof(pthread_mutex_t));
 	for(i=0; i<2; i++)
-		sem_init(&mux3.input_m[i], 0, 1);
+		pthread_mutex_init(&mux3.input_m[i], NULL);
 
 		/*	Inicializacao do Mux 4 	*/
 
@@ -102,7 +110,7 @@ int main(){
 	
 	mux4.input_m = (*pthread_mutex_t)malloc(2*sizeof(pthread_mutex_t));
 	for(i=0; i<2; i++)
-		sem_init(&mux4.input_m[i], 0, 1);
+		pthread_mutex_init(&mux4.input_m[i], NULL);
 
 		/*	Inicializacao do Mux 5 	*/
 
@@ -117,7 +125,7 @@ int main(){
 	
 	mux5.input_m = (*pthread_mutex_t)malloc(3*sizeof(pthread_mutex_t));
 	for(i=0; i<2; i++)
-		sem_init(&mux5.input_m[i], 0, 1);
+		pthread_mutex_init(&mux5.input_m[i], NULL);
 
 		/*	Inicializacao do Mux 6 	*/
 
@@ -133,20 +141,21 @@ int main(){
 	
 	mux6.input_m = (*pthread_mutex_t)malloc(4*sizeof(pthread_mutex_t));
 	for(i=0; i<2; i++)
-		sem_init(&mux6.input_m[i], 0, 1);
+		pthread_mutex_init(&mux6.input_m[i], NULL);
 
 		/*	Inicializacao do Shift Left 2 #1 	*/
 
 	shift_one.input = &extend.output;
 	shift_one.output_m = &mux6.input_m[3];
 
+	pthread_mutex_init(&shift_one.input_m, NULL);
+
 		/*	Inicializacao do Shift Left 2 #2 	*/
 
 	shift_two.input = &IR.output_25_0;
 	shift_two.output_m = &jumpconcat.input_shift_m;
 
-
+	pthread_mutex_init(&shift_two.input_m, NULL);
 
 	return 0;
-	
 }
