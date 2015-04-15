@@ -5,7 +5,7 @@
 #define THREAD_NUMBER 20
 #define MEMSIZE 1024
 
-int executing;
+extern int isRunning;
 
 extern pthread_barrier_t clocksync;
 extern pthread_barrier_t controlsync;

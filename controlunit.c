@@ -238,6 +238,8 @@ void function_controlunit(){
 	int CurrentState = STATE_instructionfetch;
 
 	while(1){
+		pthread_mutex_unlock(&mux6.input_m[2]);
+		
 		CurrentState = StateArray[CurrentState]();
 		
 		pthread_barrier_wait(&clocksync);

@@ -1,0 +1,2 @@
+all:
+	gcc -o cpu alu.c alucontrol.c concatenator.c controlregister.c controlunit.c fileregister.c header.h instructionregister.c main.c mask.h memory.c mux.c orand.c pc.c program_output.c shift.c signalextension.c

@@ -4,9 +4,13 @@
 #include "header.h"
 
 pthread_barrier_t clocksync;
+pthread_barrier_t controlsync;
+
+int isRunning;
 
 int main(){
 	int i;
+	isRunning = 1;
 
 	pthread_barrier_init(&clocksync, NULL, THREAD_NUMBER);
 
@@ -129,9 +133,11 @@ int main(){
 
 		/*	Inicializacao do Mux 6 	*/
 
+	int fourconstant = 4;
+
 	mux6.input = (**int)malloc(4*(sizeof(*int)));
 	mux6.input[0] = &B.output;
-	mux6.input[1] = 4;
+	mux6.input[1] = &fourconstant;
 	mux6.input[2] = &extend.output;
 	mux6.input[3] = &shift_one.output;
 	mux6.mask1 = separa_ALUSrcB1;
