@@ -11,10 +11,10 @@ typedef struct alu{
 	int output_alu_result;
 	int output_alu_zero;
 
-	// Mutex
-	mutex input_mux_one_m;
-	mutex input_mux_two_m;
-	mutex input_ALUControl_m;
+	// pthread_mutex_t
+	pthread_mutex_t input_mux_one_m;
+	pthread_mutex_t input_mux_two_m;
+	pthread_mutex_t input_ALUControl_m;
 
 }Alu;
 
@@ -32,10 +32,10 @@ void function_alu(){
 
 	while(1){
 
-		// DOWN nos mutex da entrada
-		sem_wait(&ALU.input_mux_one_m);
-		sem_wait(&ALU.input_mux_two_m);
-		sem_wait(&ALU.input_ALUControl_m);
+		// DOWN nos pthread_mutex_t da entrada
+		pthread_mutex_lock(&ALU.input_mux_one_m);
+		pthread_mutex_lock(&ALU.input_mux_two_m);
+		pthread_mutex_lock(&ALU.input_ALUControl_m);
 
 		// Bits de controle da operacao do ALU
 		switch(ALU.input_ALUControl){ 
@@ -83,10 +83,10 @@ void function_alu(){
 				break;
 		}
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&ALUOut.input_m);
-		sem_post(&OR_AND.zero_m);
-		sem_post(&mux5.input_m[0]);
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		pthread_mutex_unlock(&ALUOut.input_m);
+		pthread_mutex_unlock(&OR_AND.zero_m);
+		pthread_mutex_unlock(&mux5.input_m[0]);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

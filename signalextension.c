@@ -8,8 +8,8 @@ struct signalextend{
 	// Output
 	int output;
 
-	// Mutex
-	mutex input_m;
+	// pthread_mutex_t
+	pthread_mutex_t input_m;
 }
 
 SignalExtend extend;
@@ -24,8 +24,8 @@ void function_signalextend(){
 
 	while(1){
 		
-		// DOWN nos mutex da entrada
-		sem_wait(&extend.input_m);
+		// DOWN nos pthread_mutex_t da entrada
+		pthread_mutex_lock(&extend.input_m);
 
 		int n = *extend.input;
 
@@ -34,9 +34,9 @@ void function_signalextend(){
 		else
 			extend.output = n & 0x0000ffff;
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&shift_one.input_m);
-		sem_post(&mux6.input_m[2]);
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		pthread_mutex_unlock(&shift_one.input_m);
+		pthread_mutex_unlock(&mux6.input_m[2]);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

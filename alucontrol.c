@@ -8,8 +8,8 @@ typedef struct alu_control{
 	// Output
 	int output_alu;
 
-	// Mutex
-	mutex input_instruction_m;
+	// pthread_mutex_t
+	pthread_mutex_t input_instruction_m;
 
 }Alu_control;
 
@@ -25,8 +25,8 @@ void function_alu_control(){
 
 	while(1){
 
-		// DOWN nos mutex da entrada
-		sem_wait(&input_instruction_m);
+		// DOWN nos pthread_mutex_t da entrada
+		pthread_mutex_lock(&input_instruction_m);
 
 		int input_alu_op = (controlunit.ControlBits & 0x60) >> 5;
 		// 0x60 = 0000000001100000 separa ALUOp
@@ -64,8 +64,8 @@ void function_alu_control(){
 			ALUControl.output_alu = 6;
 		}
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&ALU.input_ALUControl_m);
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		pthread_mutex_unlock(&ALU.input_ALUControl_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

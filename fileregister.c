@@ -15,11 +15,11 @@ typedef struct file_register{
 	// Registradores armazenados
 	int reg[32];
 
-	// Mutex
-	mutex read_reg1_m;
-	mutex read_reg2_m;
-	mutex write_reg_m;
-	mutex write_data_m;
+	// pthread_mutex_t
+	pthread_mutex_t read_reg1_m;
+	pthread_mutex_t read_reg2_m;
+	pthread_mutex_t write_reg_m;
+	pthread_mutex_t write_data_m;
 
 }File_register;
 
@@ -57,20 +57,20 @@ void function_file_register(){
 
 	while(1){
 
-		// DOWN nos mutex da entrada
-		sem_wait(&read_reg1_m);	
-		sem_wait(&read_reg2_m);
-		sem_wait(&write_reg_m);
-		sem_wait(&write_data_m);	
+		// DOWN nos pthread_mutex_t da entrada
+		pthread_mutex_lock(&read_reg1_m);	
+		pthread_mutex_lock(&read_reg2_m);
+		pthread_mutex_lock(&write_reg_m);
+		pthread_mutex_lock(&write_data_m);	
 
 		fileRegister.readData1 = fileRegister.reg[fileRegister.readReg1];
 		fileRegister.readData2 = fileRegister.reg[fileRegister.readReg2];
 		
 		fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&A.input_m);
-		sem_post(&B.input_m);
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		pthread_mutex_unlock(&A.input_m);
+		pthread_mutex_unlock(&B.input_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
