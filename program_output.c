@@ -1,7 +1,7 @@
 void function_register_output_table(){
 
 	printf("\n");
-	printf(" \033[22;31m                        Conteudo do Banco de Registradores\n");	
+	printf(" \033[22;31m                        Conteudo do Banco de Registradores\n\n");	
 	printf(" ||     $zero | %d     ||     $t0   |  %d     ||     $s0   | %d    ||     $t8   | %d    ||\n", fileReg.reg[0], fileReg.reg[8], fileReg.reg[16], fileReg.reg[24]);
 	printf(" ||     $at   | %d     ||     $t1   |  %d     ||     $s1   | %d    ||     $t9   | %d    ||\n", fileReg.reg[1], fileReg.reg[9], fileReg.reg[17], fileReg.reg[25]); 
 	printf(" ||     $v0   | %d     ||     $t2   | %d     ||     $s2   | %d    ||     $k0   | %d    ||\n", fileReg.reg[2], fileReg.reg[10], fileReg.reg[18], fileReg.reg[26]);
@@ -13,12 +13,27 @@ void function_register_output_table(){
 	
 
 	printf("\n");
-	printf(" \033[22;34m                    Conteudo dos Registradores de Controle\n");	
+	printf(" \033[22;34m                    Conteudo dos Registradores de Controle\n\n");	
 	printf("                              ||     PC     | %d     ||\n", PC.output);
 	printf("                              ||     IR     | %d     ||\n", MemData); 
 	printf(" 			      			  ||     MDR    | %d     ||\n", MDR.output);
 	printf(" 		                      ||     A      | %d     ||\n", A.output);
 	printf(" 			                  ||     B      | %d     ||\n", B.output);
 	printf(" 			                  ||     ALUOut | %d     ||\n", ALUOut.output);
+
+	int i;	
+
+	printf("\n");
+	printf(" \033[22;32m                    Conteudo Posicoes da Memoria Alteradas\n");
+	printf("\n                               Posicao     Conteudo\n");
+	
+	for(i=0; i<MEMSIZE; i++){
+		
+		if(memory.modified[i] == 1){	// Significa que a posição na memória foi alterada
+
+			printf("                            ||     [%d]     | %d     ||", i, memory.modified[i]);		
+		}
+	}
+	printf("\n");
 	printf("\033[22;30m\n");
 }
