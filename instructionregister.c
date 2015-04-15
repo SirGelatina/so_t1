@@ -42,7 +42,7 @@ void function_instruction_register(){
 		sem_post(&fileRegister.read_reg2_m);
 		sem_post(&mux2.input_m[0]);
 		sem_post(&mux2.input_m[1]);
-		sem_post(&);
+		sem_post(&extend.input_m);
 		sem_post(&ALUControl.input_instruction_m);
 
 		pthread_barrier_wait(&clocksync);	

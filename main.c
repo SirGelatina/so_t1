@@ -79,7 +79,7 @@ int main(){
 
 	mux6.input[0] = &B.output;
 	mux6.input[1] = 4;
-	mux6.input[2] = &;
+	mux6.input[2] = &extend.output;
 	mux6.input[3] = &shift_one.output;
 	mux6.mask1 = separa_ALUSrcB1;
 	mux6.mask0 = separa_ALUSrcB0;
