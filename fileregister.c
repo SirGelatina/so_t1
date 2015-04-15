@@ -66,7 +66,9 @@ void function_file_register(){
 		fileRegister.readData1 = fileRegister.reg[fileRegister.readReg1];
 		fileRegister.readData2 = fileRegister.reg[fileRegister.readReg2];
 		
-		fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
+		// If RegWrite == 1
+		if(controlunit.ControlBits & separa_RegWrite != 0)
+			fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
 
 		// UP nos mutex de entrada das unidades que utilizam essas saidas
 		sem_post(&A.input_m);
