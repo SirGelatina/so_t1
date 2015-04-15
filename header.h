@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <pthread.h>
 
 #include "mask.h"
@@ -80,7 +82,7 @@ extern pthread_barrier_t controlsync;
 // Registrador PC
 
 	typedef struct pc_register Pc_register;
-	extern PC_register PC;
+	extern Pc_register PC;
 	void function_pc_register();
 
 // Unidade de controle
