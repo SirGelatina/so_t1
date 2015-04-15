@@ -11,7 +11,7 @@ struct signalextend{
 SignalExtend extend;
 
 void function_signalextend(){
-	extend.input = IR.output_15_0;
+	extend.input = &IR.output_15_0;
 
 	pthread_barrier_wait(&clocksync);
 

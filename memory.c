@@ -26,9 +26,10 @@ void function_memory(){
 
 		pthread_barrier_wait(&controlsync)
 
-		if()
-
-		memory.MemData = mem[memory.Address];
+		if(controlunit.ControlBits & separa_MemRead)
+			memory.MemData = memory.mem[*memory.Address];
+		else if(controlunit.ControlBits & separa_MemWrite)
+			memory.mem[*memory.Address] = *memory.WriteData;
 
 		sem_post(&IR.input_instruction_m);
 		sem_post(&MDR.input_m);
