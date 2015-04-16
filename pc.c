@@ -15,7 +15,7 @@ typedef struct pc_register{
 
 PC_register PC;
 
-void function_pc_register(){
+void * function_pc_register(void *){
 
 	// Inicialização de PC
 	PC.output = 0;

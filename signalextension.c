@@ -14,7 +14,7 @@ struct signalextend{
 
 SignalExtend extend;
 
-void function_signalextend(){
+void * function_signalextend(void *){
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	extend.input = &IR.output_15_0;

@@ -17,7 +17,7 @@ struct concatenator{
 
 Concatenator jumpconcat;
 
-void function_concatenator(){
+void * function_concatenator(void *){
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	jumpconcat.input_pc = &PC.output;

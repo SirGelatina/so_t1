@@ -15,7 +15,7 @@ struct alu_control{
 
 Alu_control ALUControl;
 
-void function_alu_control(){
+void * function_alucontrol(void *){
 	int input_alu_op;
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados

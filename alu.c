@@ -20,7 +20,7 @@ struct alu{
 
 Alu ALU;
 
-void function_alu(){
+void * function_alu(void *){
 
 	// Ligacao das entradas dessa unidade funcional com as saidas de onde virao os dados
 	ALU.input_mux_one = &mux4.output;

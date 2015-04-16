@@ -226,7 +226,7 @@ int state_jumpconclusion(){
 }
 
 
-void function_controlunit(){
+void * function_controlunit(void *){
 
 	// Ligacao da entrada dessa unidade funcional com a saída de onde virá os dados
 	controlunit.op = &IR.output_5_0;

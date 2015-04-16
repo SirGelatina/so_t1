@@ -21,10 +21,20 @@ struct memory{
 
 Memory memory;
 
-void function_memory(){
+void * function_memory(void *){
+	int i;
+
+	memory.mem = (int *)malloc(2*MEMSIZE*sizeof(int));
+	memory.modified = (int *)malloc(2*MEMSIZE*sizeof(int));
+
+	int instructionAmount = sizeof(ProgramDatabase[PROGRAMID])>>2;
+
+	for(i=0; i<instructionAmount; i++)
+		memory.mem[i] = ProgramDatabase[PROGRAMID][i];
 
 	memory.Address = &mux1.output;
 	memory.WriteData = &B.output;
+
 
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);

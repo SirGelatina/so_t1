@@ -15,7 +15,7 @@ struct instruction_register{
 
 Instruction_register IR;
 
-void function_instruction_register(){
+void * function_instruction_register(void *){
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	IR.input_instruction = &memory.MemData;

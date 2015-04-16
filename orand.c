@@ -16,7 +16,7 @@ struct or_and{
 
 Or_and OR_AND;
 
-void function_or_and(){
+void * function_or_and(void *){
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	OR_AND.zero = &ALU.output_alu_zero;

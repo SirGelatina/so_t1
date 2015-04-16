@@ -39,7 +39,7 @@ File_register fileRegister;
 // 	  	    	
 /*------------------------------------------------------------------------------------------------*/
 
-void function_file_register(){
+void * function_fileregister(void *){
 
 	// Inicialização dos registradores
 	int i;

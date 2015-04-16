@@ -163,5 +163,55 @@ int main(){
 
 	pthread_mutex_init(&shift_two.input_m, NULL);
 
+		/*
+			Criando as threads
+								*/
+
+	pthread_t threadArray = (pthread *)malloc(10*sizeof(pthread_t));
+	int size = 0;
+
+		// Unidades funcionais unicas
+
+	pthread_create(threadArray + size++, NULL, function_memory, NULL);
+	pthread_create(threadArray + size++, NULL, function_instruction_register, NULL);
+	pthread_create(threadArray + size++, NULL, function_or_and, NULL);
+	pthread_create(threadArray + size++, NULL, function_fileregister, NULL);
+	pthread_create(threadArray + size++, NULL, function_alu, NULL);
+	pthread_create(threadArray + size++, NULL, function_alucontrol, NULL);
+	pthread_create(threadArray + size++, NULL, function_pc_register, NULL);
+	pthread_create(threadArray + size++, NULL, function_controlunit, NULL);
+	pthread_create(threadArray + size++, NULL, function_signalextend, NULL);
+	pthread_create(threadArray + size++, NULL, function_concatenator, NULL);
+
+		// Unidades funcionais genericas
+
+	pthread_create(threadArray + size++, NULL, function_mux, (void *) &mux1);
+	pthread_create(threadArray + size++, NULL, function_mux, (void *) &mux2);
+	pthread_create(threadArray + size++, NULL, function_mux, (void *) &mux3);
+	pthread_create(threadArray + size++, NULL, function_mux, (void *) &mux4);
+	pthread_create(threadArray + size++, NULL, function_mux, (void *) &mux5);
+	pthread_create(threadArray + size++, NULL, function_mux, (void *) &mux6);
+
+	pthread_create(threadArray + size++, NULL, function_shift, (void *) &shift_one);
+	pthread_create(threadArray + size++, NULL, function_shift, (void *) &shift_two);
+
+	pthread_create(threadArray + size++, NULL, function_control_register, (void *) &ALUOut);
+	pthread_create(threadArray + size++, NULL, function_control_register, (void *) &MDR);
+	pthread_create(threadArray + size++, NULL, function_control_register, (void *) &A);
+	pthread_create(threadArray + size++, NULL, function_control_register, (void *) &B);
+
+		/*
+			Aguardando o fim da execucao das threads
+														*/
+
+	for(i=0; i<size; i++)
+		threadArray(threadArray[i], NULL);
+
+		/*
+			Imprimindo o resultado da memoria e registradores
+																*/
+
+
+
 	return 0;
 }
