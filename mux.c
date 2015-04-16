@@ -12,9 +12,9 @@ typedef struct mux{
 	int mask1, mask0; // Mascaras usadas para separar os dois sinais de controle. Caso tenha somente um, mask1 = 0x0000;
 	int input_N; // Numero de entradas do mux
 
-	// Mutex
-	mutex * input_m;
-	mutex * output_m;
+	// pthread_mutex_t
+	pthread_mutex_t * input_m;
+	pthread_mutex_t * output_m;
 
 }Mux;
 
@@ -33,10 +33,10 @@ void function_mux (Mux *mux){
 
 	while(1){
 
-		// DOWN nos mutex da entrada
+		// DOWN nos pthread_mutex_t da entrada
 		int i;
 		for(i=0; i<(mux->input_N); i++)
-			sem_wait(&mux.input_m[i]);
+			pthread_mutex_lock(&mux.input_m[i]);
 
 		int bit1, bit0;
 
@@ -57,8 +57,8 @@ void function_mux (Mux *mux){
 		if(bit1 == 1 && bit0 == 0) mux->output = mux->input[2];
 		if(bit1 == 1 && bit0 == 1) mux->output = mux->input[3];
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&mux->output_m);		
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		pthread_mutex_unlock(&mux->output_m);		
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

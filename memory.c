@@ -4,10 +4,11 @@ struct memory{
 	int * Address;
 	int * WriteData;
 
-	mutex Address_m;
-	mutex WriteData_m;
+	pthread_mutex_t Address_m;
+	pthread_mutex_t WriteData_m;
 
 	int * mem;
+	int * modified;
 
 	int MemData;
 };
@@ -21,8 +22,8 @@ void function_memory(){
 	pthread_barrier_wait(&clocksync);
 
 	while(1){
-		sem_wait(&memory.Address_m);
-		sem_wait(&memory.WriteData_m);
+		pthread_mutex_lock(&memory.Address_m);
+		pthread_mutex_lock(&memory.WriteData_m);
 
 		pthread_barrier_wait(&controlsync)
 
@@ -31,8 +32,8 @@ void function_memory(){
 		else if(controlunit.ControlBits & separa_MemWrite)
 			memory.mem[*memory.Address] = *memory.WriteData;
 
-		sem_post(&IR.input_instruction_m);
-		sem_post(&MDR.input_m);
+		pthread_mutex_unlock(&IR.input_instruction_m);
+		pthread_mutex_unlock(&MDR.input_m);
 
 		pthread_barrier_wait(&clocksync)
 	}

@@ -11,9 +11,9 @@ typedef struct control_register{
     // Auxiliares
 	int n_output; // Numero de saidas
 
-	// Mutex	
-	mutex input_m;
-	mutex ** output_m; 	
+	// pthread_mutex_t	
+	pthread_mutex_t input_m;
+	pthread_mutex_t ** output_m; 	
 
 }Control_register;
 
@@ -25,15 +25,15 @@ void function_control_register(Control_register *r){
 	// Execução da função
 	while(1){
 
-		// DOWN nos mutex da entrada
-		sem_wait(&input_m);		
+		// DOWN nos pthread_mutex_t da entrada
+		pthread_mutex_lock(&input_m);		
 
 		r->output = r->input;
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
 		int i;
 		for(i=0; i< r->n_output; i++)
-			sem_post(&output_m[i]);
+			pthread_mutex_unlock(&output_m[i]);
 		
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync)

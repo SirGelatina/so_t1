@@ -9,8 +9,8 @@ typedef struct or_and{
 	// Output
 	int output;
 
-	// Mutex
-	mutex zero_m;
+	// pthread_mutex_t
+	pthread_mutex_t zero_m;
 
 }Or_and;
 
@@ -26,8 +26,8 @@ void function_or_and(){
 
 	while(1){
 
-		// DOWN nos mutex da entrada
-		sem_wait(&OR_AND.zero_m);
+		// DOWN nos pthread_mutex_t da entrada
+		pthread_mutex_lock(&OR_AND.zero_m);
 
 		if (controlunit.ControlBits & separa_PCWriteCond == 0) OR_AND.PCWriteCond = 0;
 		else OR_AND.PCWriteCond = 1;
@@ -37,8 +37,8 @@ void function_or_and(){
 
 		OR_AND.output = (OR_AND.zero & OR_AND.PCWriteCond) | OR_AND.PCWrite;
 
-		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&PC.SC_m);
+		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		pthread_mutex_unlock(&PC.SC_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

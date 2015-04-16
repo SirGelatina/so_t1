@@ -78,5 +78,3 @@ void function_file_register(){
 		pthread_barrier_wait(&clocksync);
 	}
 }
-
-
