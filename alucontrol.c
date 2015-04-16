@@ -26,7 +26,7 @@ void function_alu_control(){
 
 	while(isRunning){
 
-		// DOWN nos pthread_mutex_t da entrada
+		// DOWN no pthread_mutex_t da entrada
 		pthread_mutex_lock(&ALUControl.input_instruction_m);
 
 		input_alu_op = ((controlunit.ControlBits & 0x60) >> 5);

@@ -11,6 +11,7 @@ struct shift{
 	// pthread_mutex_t
 	pthread_mutex_t input_m;
 	pthread_mutex_t * output_m;
+
 };
 
 //Unidades funcionais que representarão os shifts
@@ -25,12 +26,12 @@ void function_shift(Shift * shiftunit){
 
 	while(isRunning){
 
-		// DOWN nos pthread_mutex_t da entrada
+		// DOWN no pthread_mutex_t da entrada
 		pthread_mutex_lock(&shiftunit->input_m);
 
 		shiftunit->output = (*shiftunit->input) << 2;
 
-		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
+		// UP nos pthread_mutex_t de entrada da unidade que utiliza essa saida
 		pthread_mutex_unlock(shiftunit->output_m);
 		
 		// Barreira para sincronizar no ciclo de clock atual

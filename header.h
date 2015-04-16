@@ -101,7 +101,7 @@ extern pthread_barrier_t controlsync;
 
 	typedef struct concatenator Concatenator;
 	extern Concatenator jumpconcat;
-	void function_concatenator;
+	void function_concatenator();
 
 	/*
 			Funções auxiliares
