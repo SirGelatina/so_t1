@@ -1,6 +1,6 @@
 #include "header.h"
 
-typedef struct or_and{
+struct or_and{
 
 	// Input
 	int *zero;
@@ -12,7 +12,7 @@ typedef struct or_and{
 	// pthread_mutex_t
 	pthread_mutex_t zero_m;
 
-}Or_and;
+};
 
 Or_and OR_AND;
 
@@ -24,7 +24,7 @@ void function_or_and(){
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
-	while(1){
+	while(isRunning){
 
 		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_lock(&OR_AND.zero_m);
@@ -44,6 +44,4 @@ void function_or_and(){
 		pthread_barrier_wait(&clocksync);
 
 	}
-
 }
-

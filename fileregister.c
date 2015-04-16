@@ -1,6 +1,6 @@
 #include "header.h"
 
-typedef struct file_register{
+struct file_register{
 
 	// Input
 	int *readReg1;
@@ -21,7 +21,7 @@ typedef struct file_register{
 	mutex write_reg_m;
 	mutex write_data_m;
 
-}File_register;
+};
 
 File_register fileRegister;
 
@@ -55,7 +55,7 @@ void function_file_register(){
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
-	while(1){
+	while(isRunning){
 
 		// DOWN nos mutex da entrada
 		sem_wait(&read_reg1_m);	

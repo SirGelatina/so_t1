@@ -37,13 +37,13 @@ extern pthread_barrier_t controlsync;
 	extern Mux mux4;
 	extern Mux mux5;
 	extern Mux mux6;
-	void function_mux (int mask1, int mask0, Mux *mux, int *output[]);
+	void function_mux (Mux *mux);
 
 // Logica de escrita em PC
 
 	typedef struct or_and Or_and;
 	extern Or_and OR, AND;
-	void function_or_and(int flag);
+	void function_or_and();
 
 // Registradores de controle
 
@@ -52,7 +52,7 @@ extern pthread_barrier_t controlsync;
 	extern Control_register A;
 	extern Control_register B;
 	extern Control_register ALUOut;
-	void function_control_register(Control_register x);
+	void function_control_register(Control_register *x);
 
 // Banco de registradores
 

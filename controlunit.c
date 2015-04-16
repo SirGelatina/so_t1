@@ -14,16 +14,21 @@
 #define STATE_jumpconclusion 9
 
 struct controlunit{
+
+	// Input
 	int * op;
 
-	pthread_mutex_t op_m;
-
+	// Auxiliares
 	int ControlBits;
-}
+
+	//pthread_mutex_t
+	pthread_mutex_t op_m;
+	
+};
 
 ControlUnit controlunit;
 
-void state_instructionfetch(){
+int state_instructionfetch(){
 	int controlbits = 0;
 
 	switchbit(1, bit_MemRead);
@@ -46,7 +51,7 @@ void state_instructionfetch(){
 	return STATE_registerfetch;
 }
 
-void state_registerfetch(){
+int state_registerfetch(){
 	int controlbits = 0;
 
 	switchbit(0, bit_ALUSrcA);
@@ -80,7 +85,7 @@ void state_registerfetch(){
 	}
 }
 
-void state_computeaddress(){
+int state_computeaddress(){
 	int controlbits = 0;
 
 	switchbit(1, bit_ALUSrcA);
@@ -98,7 +103,7 @@ void state_computeaddress(){
 
 	if(opcode == op_lw)
 		return STATE_memoryaccess_read;
-	else(opcode == op_sw)
+	else if(opcode == op_sw)
 		return STATE_memoryaccess_write;
 	else{
 		isRunning = 0;
@@ -110,7 +115,7 @@ void state_computeaddress(){
 	}
 }
 
-void state_memoryaccess_read(){
+int state_memoryaccess_read(){
 	int controlbits = 0;
 
 	switchbit(1, bit_MemRead);
@@ -124,7 +129,7 @@ void state_memoryaccess_read(){
 	return STATE_memreadfinish;
 }
 
-void state_memreadfinish(){
+int state_memreadfinish(){
 	int controlbits = 0;
 
 	switchbit(1, bit_RegDst);
@@ -139,7 +144,7 @@ void state_memreadfinish(){
 	return STATE_instructionfetch;
 }
 
-void state_memoryaccess_write(){
+int state_memoryaccess_write(){
 	int controlbits = 0;
 
 	switchbit(1, bit_MemWrite);
@@ -153,7 +158,7 @@ void state_memoryaccess_write(){
 	return STATE_instructionfetch;
 }
 
-void state_execution(){
+int state_execution(){
 	int controlbits = 0;
 
 	switchbit(1, bit_ALUSrcA);
@@ -170,7 +175,7 @@ void state_execution(){
 	return STATE_Rconclusion;
 }
 
-void state_Rconclusion(){
+int state_Rconclusion(){
 	int controlbits = 0;
 
 	switchbit(1, bit_RegDst);
@@ -185,7 +190,7 @@ void state_Rconclusion(){
 	return STATE_instructionfetch;
 }
 
-void state_branchconclusion(){
+int state_branchconclusion(){
 	int controlbits = 0;
 
 	switchbit(1, bit_ALUSrcA);
@@ -205,7 +210,7 @@ void state_branchconclusion(){
 	return STATE_instructionfetch;
 }
 
-void state_jumpconclusion(){
+int state_jumpconclusion(){
 	int controlbits = 0;
 
 	switchbit(1, bit_PCWrite);
@@ -222,8 +227,11 @@ void state_jumpconclusion(){
 
 
 void function_controlunit(){
+
+	// Ligacao da entrada dessa unidade funcional com a saída de onde virá os dados
 	controlunit.op = &IR.output_5_0;
 
+	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
 	int * StateArray[]() = {
@@ -237,15 +245,18 @@ void function_controlunit(){
 		state_Rconclusion,
 		state_branchconclusion,
 		state_jumpconclusion
-	}
+	};
 
 	int CurrentState = STATE_instructionfetch;
 
-	while(1){
+	while(isRunning){
+
+		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_unlock(&mux6.input_m[2]);
 
 		CurrentState = StateArray[CurrentState]();
-		
+
+		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
 }

@@ -1,6 +1,6 @@
 #include "header.h"
 
-typedef struct mux{
+struct mux{
 
 	// Input
 	int **input;
@@ -16,7 +16,7 @@ typedef struct mux{
 	pthread_mutex_t * input_m;
 	pthread_mutex_t * output_m;
 
-}Mux;
+};
 
 Mux mux1, mux2, mux3, mux4, mux5, mux6;
 
@@ -31,12 +31,12 @@ Mux mux1, mux2, mux3, mux4, mux5, mux6;
 
 void function_mux (Mux *mux){
 
-	while(1){
+	while(isRunning){
 
 		// DOWN nos pthread_mutex_t da entrada
 		int i;
-		for(i=0; i<(mux->input_N); i++)
-			pthread_mutex_lock(&mux.input_m[i]);
+		for(i = 0; i < (mux->input_N); i++)
+			pthread_mutex_lock(&mux->input_m[i]);
 
 		int bit1, bit0;
 
