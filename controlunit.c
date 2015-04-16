@@ -71,6 +71,8 @@ void state_registerfetch(){
 	else if(opcode == op_jump)
 		return STATE_jumpconclusion;
 	else{
+		isRunning = 0;
+
 		// ERRO FATAL
 		printf("INSTRUCAO INVALIDA.\n");
 
@@ -99,6 +101,8 @@ void state_computeaddress(){
 	else(opcode == op_sw)
 		return STATE_memoryaccess_write;
 	else{
+		isRunning = 0;
+		
 		// ERRO FATAL
 		printf("INSTRUCAO INVALIDA.\n");
 
@@ -239,7 +243,7 @@ void function_controlunit(){
 
 	while(1){
 		pthread_mutex_unlock(&mux6.input_m[2]);
-		
+
 		CurrentState = StateArray[CurrentState]();
 		
 		pthread_barrier_wait(&clocksync);
