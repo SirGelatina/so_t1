@@ -23,7 +23,7 @@ void function_shift(Shift * shiftunit){
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
-	while(1){
+	while(isRunning){
 
 		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_lock(&shiftunit->input_m);
