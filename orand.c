@@ -29,12 +29,12 @@ void * function_or_and(void *){
 		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_lock(&OR_AND.zero_m);
 
-		if (controlunit.ControlBits & separa_PCWriteCond == 0)
+		if (controlunit.ControlBits & bit_PCWriteCond == 0)
 			*OR_AND.PCWriteCond = 0;
 		else 
 			*OR_AND.PCWriteCond = 1;
 
-		if (controlunit.ControlBits & separa_PCWrite == 0)
+		if (controlunit.ControlBits & bit_PCWrite == 0)
 			*OR_AND.PCWrite = 0;
 		else 
 			*OR_AND.PCWrite = 1;
