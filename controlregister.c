@@ -28,7 +28,7 @@ void function_control_register(Control_register *r){
 		// DOWN no pthread_mutex_t da entrada
 		pthread_mutex_lock(&r->input_m);		
 
-		r->output = r->input;
+		r->output = *r->input;
 
 		// UP no pthread_mutex_t de entrada das unidades que utiliza essa saida
 		int i;

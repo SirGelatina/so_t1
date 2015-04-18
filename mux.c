@@ -52,13 +52,13 @@ void function_mux (Mux *mux){
 		//   1    |    0    |     10
 		//   1    |    1    |     11
 
-		if(bit1 == 0 && bit0 == 0) mux->output = mux->input[0];
-		if(bit1 == 0 && bit0 == 1) mux->output = mux->input[1];
-		if(bit1 == 1 && bit0 == 0) mux->output = mux->input[2];
-		if(bit1 == 1 && bit0 == 1) mux->output = mux->input[3];
+		if(bit1 == 0 && bit0 == 0) mux->output = *mux->input[0];
+		if(bit1 == 0 && bit0 == 1) mux->output = *mux->input[1];
+		if(bit1 == 1 && bit0 == 0) mux->output = *mux->input[2];
+		if(bit1 == 1 && bit0 == 1) mux->output = *mux->input[3];
 
 		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(&mux->output_m);		
+		pthread_mutex_unlock(mux->output_m);		
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
