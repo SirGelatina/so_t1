@@ -16,10 +16,10 @@ struct file_register{
 	int reg[32];
 
 	// Mutex
-	mutex read_reg1_m;
-	mutex read_reg2_m;
-	mutex write_reg_m;
-	mutex write_data_m;
+	pthread_mutex_t read_reg1_m;
+	pthread_mutex_t read_reg2_m;
+	pthread_mutex_t write_reg_m;
+	pthread_mutex_t write_data_m;
 
 };
 
@@ -58,21 +58,21 @@ void * function_fileregister(void *){
 	while(isRunning){
 
 		// DOWN nos mutex da entrada
-		sem_wait(&read_reg1_m);	
-		sem_wait(&read_reg2_m);
-		sem_wait(&write_reg_m);
-		sem_wait(&write_data_m);	
+		pthread_mutex_lock(&fileRegister.read_reg1_m);	
+		pthread_mutex_lock(&fileRegister.read_reg2_m);
+		pthread_mutex_lock(&fileRegister.write_reg_m);
+		pthread_mutex_lock(&fileRegister.write_data_m);	
 
-		fileRegister.readData1 = fileRegister.reg[fileRegister.readReg1];
-		fileRegister.readData2 = fileRegister.reg[fileRegister.readReg2];
+		fileRegister.readData1 = fileRegister.reg[*fileRegister.readReg1];
+		fileRegister.readData2 = fileRegister.reg[*fileRegister.readReg2];
 		
 		// If RegWrite == 1
 		if(controlunit.ControlBits & separa_RegWrite != 0)
-			fileRegister.reg[fileRegister.writeReg] = fileRegister.writeData;
+			fileRegister.reg[*fileRegister.writeReg] = fileRegister.writeData;
 
 		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		sem_post(&A.input_m);
-		sem_post(&B.input_m);
+		pthread_mutex_unlock(&A.input_m);
+		pthread_mutex_unlock(&B.input_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

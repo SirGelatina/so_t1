@@ -110,7 +110,7 @@ extern pthread_barrier_t controlsync;
 									*/
 
 	extern const int ProgramDatabase[][];
-	extern const int StartingRegisters[][]
+	extern const int StartingRegisters[][];
 
 	void function_output_table();
 
