@@ -29,8 +29,7 @@ void * function_alucontrol(void *){
 		// DOWN no pthread_mutex_t da entrada
 		pthread_mutex_lock(&ALUControl.input_instruction_m);
 
-		input_alu_op = ((controlunit.ControlBits & 0x60) >> 5);
-		// 0x60 = 0000000001100000 separa ALUOp
+		input_alu_op = ((controlunit.ControlBits & bit_ALUOp10) >> 5);
 
 		if(input_alu_op == 2){	//Tipo R: ADD, SUB, AND, OR e SLT
 			switch(*ALUControl.input_instruction){

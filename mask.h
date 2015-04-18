@@ -1,11 +1,7 @@
 #ifndef _MASCARA_
 #define _MASCARA_
-#define MAX 512
-#define CACHE_SET 8
-#define NUMREG 32
 
 /*posicao dos bits nos sinais de controle da ULA
-char C_ULA
 0- controle ULA 0
 1- controle ULA 1
 2- controle ULA 2
@@ -16,7 +12,6 @@ char C_ULA
 7- nao e usado
 
 posicao dos bits nos 16 sinais de controle determinados pela UC 
-int S_C
 0- RegDst		(RegDst)
 1- EscReg		(RegWrite)
 2- UALFonteA	(ALUSrcA)
@@ -63,13 +58,13 @@ int S_C
 
 // mascaras usadas para separar os campos dentro da instrucao
 //						 			       31  26 25 21 20 16 15 11 10  6 5    0
-#define separa_cop			0xfc000000	// 111111 00000 00000 00000 00000 000000  usada com &
-#define separa_rs			0x03e00000	// 000000 11111 00000 00000 00000 000000  usada com &
-#define separa_rt			0x001f0000	// 000000 00000 11111 00000 00000 000000  usada com &
-#define separa_rd           0x0000f800	// 000000 00000 00000 11111 00000 000000  usada com &
-#define separa_cfuncao		0x0000003f	// 000000 00000 00000 00000 00000 111111  usada com &
-#define separa_imediato     0x0000ffff	// 000000 00000 00000   1111111111111111  usada com &
-#define separa_endereco_jump 0x03ffffff // 000000     11111111111111111111111111  usada com &
+#define bit_cop			   0xfc000000	// 111111 00000 00000 00000 00000 000000  
+#define bit_rs			   0x03e00000	// 000000 11111 00000 00000 00000 000000  
+#define bit_rt			   0x001f0000	// 000000 00000 11111 00000 00000 000000 
+#define bit_rd             0x0000f800	// 000000 00000 00000 11111 00000 000000  
+#define bit_cfuncao		   0x0000003f	// 000000 00000 00000 00000 00000 111111 
+#define bit_imediato       0x0000ffff	// 000000 00000 00000   1111111111111111  
+#define bit_endereco_jump  0x03ffffff   // 000000     11111111111111111111111111  
 
 // usada para eliminar os 2 bits mais significativos do Campo Funcao.
 // Atua na variavel local dentro de UC_ULA
@@ -78,77 +73,24 @@ int S_C
 // usada para separar os 4 bits mais significativos de PC. Atua em PC.
 #define separa_4bits_PC			0xf0000000	// 11110000000000000000000000000000  usada com &
 
-// usadas para ativar os sinais de controle. Atuam em SC.
-#define bit_RegDst            0x0001     // 0000 0000 0000 0001  usada com |
-#define bit_RegWrite          0x0002      // 0000 0000 0000 0010  usada com |
-#define bit_ALUSrcA           0x0004      // 0000 0000 0000 0100  usada com |
-#define bit_ALUSrcB0          0x0008      // 0000 0000 0000 1000  usada com |
-#define bit_ALUSrcB1          0x0010      // 0000 0000 0001 0000  usada com |
-#define bit_ALUOp0            0x0020      // 0000 0000 0010 0000  usada com |
-#define bit_ALUOp1            0x0040      // 0000 0000 0100 0000  usada com |
-#define bit_PCSource0         0x0080      // 0000 0000 1000 0000  usada com |
-#define bit_PCSource1         0x0100      // 0000 0001 0000 0000  usada com |
-#define bit_PCWriteCond       0x0200      // 0000 0010 0000 0000  usada com |
-#define bit_PCWrite           0x0400      // 0000 0100 0000 0000  usada com |
-#define bit_IorD              0x0800      // 0000 1000 0000 0000  usada com |
-#define bit_MemRead           0x1000      // 0001 0000 0000 0000  usada com |
-#define bit_MemWrite          0x2000      // 0010 0000 0000 0000  usada com |
-#define bit_MemtoReg          0x4000      // 0100 0000 0000 0000  usada com |
-#define bit_IRWrite           0x8000      // 1000 0000 0000 0000  usada com |
-
-// usadas para ativar os sinais de controle. Atuam em SC.
-#define ativa_RegDst            0x0001     // 0000 0000 0000 0001  usada com |
-#define ativa_RegWrite          0x0002      // 0000 0000 0000 0010  usada com |
-#define ativa_ALUSrcA           0x0004      // 0000 0000 0000 0100  usada com |
-#define ativa_ALUSrcB0          0x0008      // 0000 0000 0000 1000  usada com |
-#define ativa_ALUSrcB1          0x0010      // 0000 0000 0001 0000  usada com |
-#define ativa_ALUOp0            0x0020      // 0000 0000 0010 0000  usada com |
-#define ativa_ALUOp1            0x0040      // 0000 0000 0100 0000  usada com |
-#define ativa_PCSource0         0x0080      // 0000 0000 1000 0000  usada com |
-#define ativa_PCSource1         0x0100      // 0000 0001 0000 0000  usada com |
-#define ativa_PCWriteCond       0x0200      // 0000 0010 0000 0000  usada com |
-#define ativa_PCWrite           0x0400      // 0000 0100 0000 0000  usada com |
-#define ativa_IorD              0x0800      // 0000 1000 0000 0000  usada com |
-#define ativa_MemRead           0x1000      // 0001 0000 0000 0000  usada com |
-#define ativa_MemWrite          0x2000      // 0010 0000 0000 0000  usada com |
-#define ativa_MemtoReg          0x4000      // 0100 0000 0000 0000  usada com |
-#define ativa_IRWrite           0x8000      // 1000 0000 0000 0000  usada com |
-
-// usadas para desativar os sinais de controle. Atuam em SC
-#define desativa_RegDst				0xfffe		// 1111 1111 1111 1110  usada com &
-#define desativa_RegWrite			0xfffd      // 1111 1111 1111 1101  usada com &
-#define desativa_ALUSrcA			0xfffb      // 1111 1111 1111 1011  usada com &
-#define desativa_ALUSrcB0			0xfff7      // 1111 1111 1111 0111  usada com &
-#define desativa_ALUSrcB1			0xffef      // 1111 1111 1110 1111  usada com &
-#define desativa_ALUOp0				0xffdf      // 1111 1111 1101 1111  usada com &
-#define desativa_ALUOp1				0xffbf      // 1111 1111 1011 1111  usada com &
-#define desativa_PCSource0			0xff7f      // 1111 1111 0111 1111  usada com &
-#define desativa_PCSource1			0xfeff      // 1111 1110 1111 1111  usada com &
-#define desativa_PCWriteCond		0xfdff      // 1111 1101 1111 1111  usada com &
-#define desativa_PCWrite			0xfbff      // 1111 1011 1111 1111  usada com &
-#define desativa_IorD				0xf7ff      // 1111 0111 1111 1111  usada com &
-#define desativa_MemRead			0xefff      // 1110 1111 1111 1111  usada com &
-#define desativa_MemWrite			0xdfff      // 1101 1111 1111 1111  usada com &
-#define desativa_MemtoReg			0xbfff      // 1011 1111 1111 1111  usada com &
-#define desativa_IRWrite			0x7fff      // 0111 1111 1111 1111  usada com &
-
-// usadas para separar os sinais de controle. Atuam em SC.
-#define separa_RegDst		   0x0001	   // 0000 0000 0000 0001  usada com &
-#define separa_RegWrite		   0x0002      // 0000 0000 0000 0010  usada com &
-#define separa_ALUSrcA    	   0x0004      // 0000 0000 0000 0100  usada com &
-#define separa_ALUSrcB0        0x0008      // 0000 0000 0000 1000  usada com &
-#define separa_ALUSrcB1        0x0010      // 0000 0000 0001 0000  usada com &
-#define separa_ALUOp0          0x0020      // 0000 0000 0010 0000  usada com &
-#define separa_ALUOp1          0x0040      // 0000 0000 0100 0000  usada com &
-#define separa_PCSource0       0x0080      // 0000 0000 1000 0000  usada com &
-#define separa_PCSource1       0x0100      // 0000 0001 0000 0000  usada com &
-#define separa_PCWriteCond     0x0200      // 0000 0010 0000 0000  usada com &
-#define separa_PCWrite         0x0400      // 0000 0100 0000 0000  usada com &
-#define separa_IorD            0x0800      // 0000 1000 0000 0000  usada com &
-#define separa_MemRead         0x1000      // 0001 0000 0000 0000  usada com &
-#define separa_MemWrite        0x2000      // 0010 0000 0000 0000  usada com &
-#define separa_MemtoReg        0x4000      // 0100 0000 0000 0000  usada com &
-#define separa_IRWrite         0x8000      // 1000 0000 0000 0000  usada com &
+// Mascaras usadas para ativar e separar os bits do sinal de controle
+#define bit_RegDst            0x0001
+#define bit_RegWrite          0x0002 
+#define bit_ALUSrcA           0x0004 
+#define bit_ALUSrcB0          0x0008 
+#define bit_ALUSrcB1          0x0010 
+#define bit_ALUOp0            0x0020 
+#define bit_ALUOp1            0x0040 
+#define bit_ALUOp10           0x0060
+#define bit_PCSource0         0x0080 
+#define bit_PCSource1         0x0100 
+#define bit_PCWriteCond       0x0200 
+#define bit_PCWrite           0x0400 
+#define bit_IorD              0x0800   
+#define bit_MemRead           0x1000    
+#define bit_MemWrite          0x2000     
+#define bit_MemtoReg          0x4000    
+#define bit_IRWrite           0x8000      
 
 // controle de sequenciamento explicito para controle microprogramado
 #define sequencia   0x00030000
