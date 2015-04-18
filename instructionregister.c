@@ -29,14 +29,14 @@ void * function_instruction_register(void *){
 		pthread_mutex_lock(&IR.input_instruction_m);
 
 		// If IRWrite == 1
-		if(controlunit.ControlBits & separa_IRWrite != 0){
+		if(controlunit.ControlBits & bit_IRWrite != 0){
 			IR.output_31_26 = ((*IR.input_instruction) >> 26);
-			IR.output_25_21 = ((*IR.input_instruction & separa_rs) >> 21);
-			IR.output_25_0  = (*IR.input_instruction & separa_endereco_jump);
-			IR.output_20_16 = ((*IR.input_instruction & separa_rt) >> 16);
-			IR.output_15_0  = (*IR.input_instruction & separa_imediato);
-			IR.output_15_11 = ((*IR.input_instruction & separa_rd) >> 11);
-			IR.output_5_0   = (*IR.input_instruction & separa_cfuncao);
+			IR.output_25_21 = ((*IR.input_instruction & bit_rs) >> 21);
+			IR.output_25_0  = (*IR.input_instruction & bit_endereco_jump);
+			IR.output_20_16 = ((*IR.input_instruction & bit_rt) >> 16);
+			IR.output_15_0  = (*IR.input_instruction & bit_imediato);
+			IR.output_15_11 = ((*IR.input_instruction & bit_rd) >> 11);
+			IR.output_5_0   = (*IR.input_instruction & bit_cfuncao);
 		}
 
 		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
