@@ -27,12 +27,12 @@ void * function_or_and(){
 			pthread_cond_wait(&controlsync, &controlmutex);
 		pthread_mutex_unlock(&controlmutex);
 
-		if (controlunit.ControlBits & bit_PCWriteCond == 0)
+		if ((controlunit.ControlBits & bit_PCWriteCond) == 0)
 			*OR_AND.PCWriteCond = 0;
 		else 
 			*OR_AND.PCWriteCond = 1;
 
-		if (controlunit.ControlBits & bit_PCWrite == 0)
+		if ((controlunit.ControlBits & bit_PCWrite) == 0)
 			*OR_AND.PCWrite = 0;
 		else 
 			*OR_AND.PCWrite = 1;

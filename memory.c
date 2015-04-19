@@ -16,12 +16,13 @@ void * function_memory(){
 
 	int instructionAmount = sizeof(ProgramDatabase[PROGRAMID])>>2;
 
+	// Escrevendo o programa (presente em code.c) na memoria
 	for(i=0; i<instructionAmount; i++)
 		memory.mem[i] = ProgramDatabase[PROGRAMID][i];
 
+	// Ligacao das entradas dessa unidade funcional com as saidas de onde vira os dados
 	memory.Address = &mux1.output;
 	memory.WriteData = &B.output;
-
 
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
@@ -39,9 +40,9 @@ void * function_memory(){
 			pthread_cond_wait(&controlsync, &controlmutex);
 		pthread_mutex_unlock(&controlmutex);
 
-		if(controlunit.ControlBits & bit_MemRead)
+		if((controlunit.ControlBits & bit_MemRead) != 0)
 			memory.MemData = memory.mem[*memory.Address];
-		else if(controlunit.ControlBits & bit_MemWrite){
+		else if((controlunit.ControlBits & bit_MemWrite) != 0){
 			memory.mem[*memory.Address] = *memory.WriteData;
 			memory.modified[*memory.Address] = 1;
 		}

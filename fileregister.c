@@ -66,7 +66,7 @@ void * function_fileregister(){
 		fileRegister.readData2 = fileRegister.reg[*fileRegister.readReg2];
 		
 		// If RegWrite == 1
-		if(controlunit.ControlBits & bit_RegWrite != 0)
+		if((controlunit.ControlBits & bit_RegWrite) != 0)
 			fileRegister.reg[*fileRegister.writeReg] = *fileRegister.writeData;
 
 		// UP nos mutex de entrada das unidades que utilizam essas saidas

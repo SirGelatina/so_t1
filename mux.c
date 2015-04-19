@@ -33,10 +33,10 @@ void * function_mux (void * arg){
 
 		int bit1, bit0;
 
-		if(mux->mask1 & controlunit.ControlBits == 0) bit1 = 0;
+		if((mux->mask1 & controlunit.ControlBits) == 0) bit1 = 0;
 		else bit1 = 1;
 
-		if(mux->mask0 & controlunit.ControlBits == 0) bit0 = 0;
+		if((mux->mask0 & controlunit.ControlBits) == 0) bit0 = 0;
 		else bit0 = 1;
 
 		//  bit1  |   bit0  |  resultado

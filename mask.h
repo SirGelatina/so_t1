@@ -34,23 +34,23 @@ Posicao dos bits nos 16 sinais de controle determinados pela UC
 
 // Mascaras usadas para ativar e separar os bits do sinal de controle
 
-#define bit_RegDst            0x0001
-#define bit_RegWrite          0x0002 
-#define bit_ALUSrcA           0x0004 
-#define bit_ALUSrcB0          0x0008 
-#define bit_ALUSrcB1          0x0010 
-#define bit_ALUOp0            0x0020 
-#define bit_ALUOp1            0x0040 
-#define bit_ALUOp10           0x0060
-#define bit_PCSource0         0x0080 
-#define bit_PCSource1         0x0100 
-#define bit_PCWriteCond       0x0200 
-#define bit_PCWrite           0x0400 
-#define bit_IorD              0x0800   
-#define bit_MemRead           0x1000    
-#define bit_MemWrite          0x2000     
-#define bit_MemtoReg          0x4000    
-#define bit_IRWrite           0x8000
+#define bit_RegDst            0x0001	// 0000 0000 0000 0001
+#define bit_RegWrite          0x0002	// 0000 0000 0000 0010 
+#define bit_ALUSrcA           0x0004 	// 0000 0000 0000 0100
+#define bit_ALUSrcB0          0x0008 	// 0000 0000 0000 1000
+#define bit_ALUSrcB1          0x0010 	// 0000 0000 0001 0000
+#define bit_ALUOp0            0x0020 	// 0000 0000 0010 0000
+#define bit_ALUOp1            0x0040 	// 0000 0000 0100 0000
+#define bit_ALUOp10           0x0060	// 0000 0000 0110 0000
+#define bit_PCSource0         0x0080 	// 0000 0000 1000 0000
+#define bit_PCSource1         0x0100 	// 0000 0001 0000 0000
+#define bit_PCWriteCond       0x0200 	// 0000 0010 0000 0000
+#define bit_PCWrite           0x0400 	// 0000 0100 0000 0000
+#define bit_IorD              0x0800   	// 0000 1000 0000 0000
+#define bit_MemRead           0x1000    // 0001 0000 0000 0000
+#define bit_MemWrite          0x2000    // 0010 0000 0000 0000
+#define bit_MemtoReg          0x4000    // 0100 0000 0000 0000
+#define bit_IRWrite           0x8000	// 1000 0000 0000 0000
 
 // Id de instrucoes
 
