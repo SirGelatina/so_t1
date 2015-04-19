@@ -24,7 +24,7 @@ void * function_instruction_register(){
 		pthread_mutex_unlock(&controlmutex);
 
 		// If IRWrite == 1
-		if((controlunit.ControlBits & bit_IRWrite) != 0){
+		if(controlunit.ControlBits & bit_IRWrite){
 			IR.output_31_26 = ((*IR.input_instruction) >> 26);
 			IR.output_25_21 = ((*IR.input_instruction & bit_rs) >> 21);
 			IR.output_25_0  = (*IR.input_instruction & bit_endereco_jump);

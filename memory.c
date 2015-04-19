@@ -40,9 +40,9 @@ void * function_memory(){
 			pthread_cond_wait(&controlsync, &controlmutex);
 		pthread_mutex_unlock(&controlmutex);
 
-		if((controlunit.ControlBits & bit_MemRead) != 0)
+		if(controlunit.ControlBits & bit_MemRead)
 			memory.MemData = memory.mem[*memory.Address];
-		else if((controlunit.ControlBits & bit_MemWrite) != 0){
+		else if(controlunit.ControlBits & bit_MemWrite){
 			memory.mem[*memory.Address] = *memory.WriteData;
 			memory.modified[*memory.Address] = 1;
 		}
