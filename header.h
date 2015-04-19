@@ -158,7 +158,7 @@ extern const int StartingRegisters[][64];
 		// Registradores armazenados
 		int reg[32];
 
-		// Mutex
+		// pthread_mutex_t
 		pthread_mutex_t read_reg1_m;
 		pthread_mutex_t read_reg2_m;
 		pthread_mutex_t write_reg_m;
