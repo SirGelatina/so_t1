@@ -1,26 +1,12 @@
 #include "header.h"
 
-struct alu{
-
-	// Input
-	int * input_mux_one;
-	int * input_mux_two;
-	int * input_ALUControl;
-	
-	// Output
-	int output_alu_result;
-	int output_alu_zero;
-
-	// pthread_mutex_t
-	pthread_mutex_t input_mux_one_m;
-	pthread_mutex_t input_mux_two_m;
-	pthread_mutex_t input_ALUControl_m;
-
-};
-
 Alu ALU;
 
-void * function_alu(void *){
+void * function_alu(){
+
+	pthread_mutex_init(&ALU.input_mux_one_m, NULL);
+	pthread_mutex_init(&ALU.input_mux_two_m, NULL);
+	pthread_mutex_init(&ALU.input_ALUControl_m, NULL);
 
 	// Ligacao das entradas dessa unidade funcional com as saidas de onde virao os dados
 	ALU.input_mux_one = &mux4.output;
@@ -31,6 +17,7 @@ void * function_alu(void *){
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_lock(&ALU.input_mux_one_m);
@@ -85,10 +72,16 @@ void * function_alu(void *){
 
 		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
 		pthread_mutex_unlock(&ALUOut.input_m);
-		pthread_mutex_unlock(&Or_and.zero_m);
+		pthread_mutex_unlock(&OR_AND.zero_m);
 		pthread_mutex_unlock(&mux5.input_m[0]);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: ALU\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

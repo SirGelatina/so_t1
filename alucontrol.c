@@ -1,22 +1,13 @@
 #include "header.h"
 
-struct alu_control{
 
-	// Input
-	int * input_instruction;
-	
-	// Output
-	int output_alu;
-
-	// pthread_mutex_t
-	pthread_mutex_t input_instruction_m;
-
-};
 
 Alu_control ALUControl;
 
-void * function_alucontrol(void *){
+void * function_alucontrol(){
 	int input_alu_op;
+
+	pthread_mutex_init(&ALUControl.input_instruction_m, NULL);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	ALUControl.input_instruction = &IR.output_5_0;
@@ -25,9 +16,16 @@ void * function_alucontrol(void *){
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN no pthread_mutex_t da entrada
 		pthread_mutex_lock(&ALUControl.input_instruction_m);
+
+		// Espera pela unidade de controle
+		pthread_mutex_lock(&controlmutex);
+		while(!controlready) // p2
+			pthread_cond_wait(&controlsync, &controlmutex);
+		pthread_mutex_unlock(&controlmutex);
 
 		input_alu_op = ((controlunit.ControlBits & bit_ALUOp10) >> 5);
 
@@ -70,4 +68,10 @@ void * function_alucontrol(void *){
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: ALU Control\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

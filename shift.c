@@ -1,30 +1,20 @@
 #include "header.h"
 
-struct shift{
-
-	// Input
-	int * input;
-
-	// Output
-	int output;
-
-	// pthread_mutex_t
-	pthread_mutex_t input_m;
-	pthread_mutex_t * output_m;
-
-};
+	
 
 //Unidades funcionais que representarão os shifts
 Shift shift_one;
 Shift shift_two;
 
 //Função responsável por controlar a unidade funcional
-void function_shift(Shift * shiftunit){
+void * function_shift(void * arg){
+	Shift * shiftunit = (Shift *)arg;
 
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN no pthread_mutex_t da entrada
 		pthread_mutex_lock(&shiftunit->input_m);
@@ -37,4 +27,10 @@ void function_shift(Shift * shiftunit){
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Shift Anonimo\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

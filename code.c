@@ -1,6 +1,6 @@
 #include "header.h"
 
-const int ProgramDatabase[][] = {
+const int ProgramDatabase[][MEMSIZE] = {
 
 	{
 		0b00000010011100110100100000100000 // add $t1, $s3, $s3
@@ -72,7 +72,7 @@ const int ProgramDatabase[][] = {
 	}
 };
 
-const int StartingRegisters[][] = { 
+const int StartingRegisters[][64] = { 
 
 	/*
 

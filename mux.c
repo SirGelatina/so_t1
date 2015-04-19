@@ -1,23 +1,5 @@
 #include "header.h"
 
-struct mux{
-
-	// Input
-	int **input;
-
-	// Output
-	int output;
-
-	// Auxiliares
-	int mask1, mask0; // Mascaras usadas para separar os dois sinais de controle. Caso tenha somente um, mask1 = 0x0000;
-	int input_N; // Numero de entradas do mux
-
-	// pthread_mutex_t
-	pthread_mutex_t * input_m;
-	pthread_mutex_t * output_m;
-
-};
-
 Mux mux1, mux2, mux3, mux4, mux5, mux6;
 
 /*
@@ -29,14 +11,25 @@ Mux mux1, mux2, mux3, mux4, mux5, mux6;
 	separa_PCSource1, separa_PCSource0 - mux6
 */
 
-void function_mux (Mux *mux){
+void * function_mux (void * arg){
+	Mux * mux = (Mux *)arg;
+
+	// Barreira para sincronizar na inicializacao de todas threads
+	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos pthread_mutex_t da entrada
 		int i;
 		for(i = 0; i < (mux->input_N); i++)
 			pthread_mutex_lock(&mux->input_m[i]);
+
+		// Espera pela unidade de controle
+		pthread_mutex_lock(&controlmutex);
+		while(!controlready) // p2
+			pthread_cond_wait(&controlsync, &controlmutex);
+		pthread_mutex_unlock(&controlmutex);
 
 		int bit1, bit0;
 
@@ -65,4 +58,9 @@ void function_mux (Mux *mux){
 
 	}
 
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Multiplexador Anonimo\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

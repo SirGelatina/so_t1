@@ -1,23 +1,13 @@
 #include "header.h"
 
-struct concatenator{
-
-	// Input
-	int * input_pc;
-	int * input_shift;
 	
-	// Output
-	int output;
-
-	// pthread_mutex_t
-	pthread_mutex_t input_pc_m;
-	pthread_mutex_t input_shift_m;
-
-};
 
 Concatenator jumpconcat;
 
-void * function_concatenator(void *){
+void * function_concatenator(){
+
+	pthread_mutex_init(&jumpconcat.input_pc_m, NULL);
+	pthread_mutex_init(&jumpconcat.input_shift_m, NULL);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	jumpconcat.input_pc = &PC.output;
@@ -27,10 +17,11 @@ void * function_concatenator(void *){
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos pthread_mutex_t da entrada
-		pthread_mutex_lock(jumpconcat.input_pc_m);
-		pthread_mutex_lock(jumpconcat.input_shift_m);
+		pthread_mutex_lock(&jumpconcat.input_pc_m);
+		pthread_mutex_lock(&jumpconcat.input_shift_m);
 
 		jumpconcat.output = (*jumpconcat.input_pc & 0xf0000000) | (*jumpconcat.input_shift & 0x0fffffff);
 
@@ -40,4 +31,10 @@ void * function_concatenator(void *){
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Concatenator\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

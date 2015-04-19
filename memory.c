@@ -1,31 +1,18 @@
 #include "header.h"
 
-struct memory{
-
-	// Input
-	int * Address;
-	int * WriteData;
-
-	// Output
-	int MemData;
-	
-	// Auxiliares
-	int * mem;
-	int * modified;
-
-	// pthread_mutex_t
-	pthread_mutex_t Address_m;
-	pthread_mutex_t WriteData_m;
-
-};
-
 Memory memory;
 
-void * function_memory(void *){
+void * function_memory(){
+	pthread_mutex_init(&memory.Address_m, NULL);
+	pthread_mutex_init(&memory.WriteData_m, NULL);
+
 	int i;
 
 	memory.mem = (int *)malloc(2*MEMSIZE*sizeof(int));
 	memory.modified = (int *)malloc(2*MEMSIZE*sizeof(int));
+
+	for(i=0; i<2*MEMSIZE; i++)
+		memory.modified[i] = 0;
 
 	int instructionAmount = sizeof(ProgramDatabase[PROGRAMID])>>2;
 
@@ -40,18 +27,24 @@ void * function_memory(void *){
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos pthread_mutex_t das entradas
 		pthread_mutex_lock(&memory.Address_m);
 		pthread_mutex_lock(&memory.WriteData_m);
 
-		// Barreira para sincronizar no ciclo de clock atual
-		pthread_barrier_wait(&controlsync);
+		// Espera pela unidade de controle
+		pthread_mutex_lock(&controlmutex);
+		while(!controlready) // p2
+			pthread_cond_wait(&controlsync, &controlmutex);
+		pthread_mutex_unlock(&controlmutex);
 
-		if(controlunit.ControlBits & separa_MemRead)
+		if(controlunit.ControlBits & bit_MemRead)
 			memory.MemData = memory.mem[*memory.Address];
-		else if(controlunit.ControlBits & separa_MemWrite)
+		else if(controlunit.ControlBits & bit_MemWrite){
 			memory.mem[*memory.Address] = *memory.WriteData;
+			memory.modified[*memory.Address] = 1;
+		}
 
 		// UP nos pthread_mutex_t de entrada da unidade que utiliza essa saida
 		pthread_mutex_unlock(&IR.input_instruction_m);
@@ -60,4 +53,10 @@ void * function_memory(void *){
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Memoria\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

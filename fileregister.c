@@ -1,27 +1,6 @@
 #include "header.h"
 
-struct file_register{
-
-	// Input
-	int *readReg1;
-	int *readReg2;
-	int *writeReg;
-	int *writeData;
-
-	// Output
-	int readData1;
-	int readData2;
-
-	// Registradores armazenados
-	int reg[32];
-
-	// Mutex
-	pthread_mutex_t read_reg1_m;
-	pthread_mutex_t read_reg2_m;
-	pthread_mutex_t write_reg_m;
-	pthread_mutex_t write_data_m;
-
-};
+	
 
 File_register fileRegister;
 
@@ -39,12 +18,25 @@ File_register fileRegister;
 // 	  	    	
 /*------------------------------------------------------------------------------------------------*/
 
-void * function_fileregister(void *){
+void * function_fileregister(){
+	pthread_mutex_init(&fileRegister.read_reg1_m, NULL);
+	pthread_mutex_init(&fileRegister.read_reg2_m, NULL);
+	pthread_mutex_init(&fileRegister.write_reg_m, NULL);
+	pthread_mutex_init(&fileRegister.write_data_m, NULL);
 
 	// Inicialização dos registradores
 	int i;
 	for(i=0; i<32; i++)
 		fileRegister.reg[i] = 0;
+
+	// Atribuindo registradores iniciais
+	int registerAmount = sizeof(StartingRegisters[REGID])>>3;
+	for(i=0; i<registerAmount; i++)
+		fileRegister.reg[ StartingRegisters[REGID][i*2 + 1] ] = StartingRegisters[REGID][i*2];
+
+	// Inicializando registradores com valor padrao: $zero e $sp
+	fileRegister.reg[0] = 0;
+	fileRegister.reg[29] = MEMSIZE;
 
 	// Ligacao das entradas dessa unidade funcional com as saidas de onde virao os dados
 	fileRegister.readReg1 = &IR.output_25_21;
@@ -56,6 +48,7 @@ void * function_fileregister(void *){
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos mutex da entrada
 		pthread_mutex_lock(&fileRegister.read_reg1_m);	
@@ -63,12 +56,18 @@ void * function_fileregister(void *){
 		pthread_mutex_lock(&fileRegister.write_reg_m);
 		pthread_mutex_lock(&fileRegister.write_data_m);	
 
+		// Espera pela unidade de controle
+		pthread_mutex_lock(&controlmutex);
+		while(!controlready) // p2
+			pthread_cond_wait(&controlsync, &controlmutex);
+		pthread_mutex_unlock(&controlmutex);
+
 		fileRegister.readData1 = fileRegister.reg[*fileRegister.readReg1];
 		fileRegister.readData2 = fileRegister.reg[*fileRegister.readReg2];
 		
 		// If RegWrite == 1
-		if(controlunit.ControlBits & separa_RegWrite != 0)
-			fileRegister.reg[*fileRegister.writeReg] = fileRegister.writeData;
+		if(controlunit.ControlBits & bit_RegWrite != 0)
+			fileRegister.reg[*fileRegister.writeReg] = *fileRegister.writeData;
 
 		// UP nos mutex de entrada das unidades que utilizam essas saidas
 		pthread_mutex_unlock(&A.input_m);
@@ -77,4 +76,10 @@ void * function_fileregister(void *){
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Banco de registradores\n");
+    fflush(0);
+
+    pthread_exit(0);
 }

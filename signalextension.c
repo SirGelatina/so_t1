@@ -1,20 +1,11 @@
 #include "header.h"
 
-struct signalextend{
-
-	// Input
-	int * input;
-
-	// Output
-	int output;
-
-	// pthread_mutex_t
-	pthread_mutex_t input_m;
-}
+	
 
 SignalExtend extend;
 
-void * function_signalextend(void *){
+void * function_signalextend(){
+	pthread_mutex_init(&extend.input_m, NULL);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	extend.input = &IR.output_15_0;
@@ -22,7 +13,8 @@ void * function_signalextend(void *){
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
-	while(1){
+	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 		
 		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_lock(&extend.input_m);
@@ -41,6 +33,12 @@ void * function_signalextend(void *){
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Extensao de Sinal\n");
+    fflush(0);
+
+    pthread_exit(0);
 }
 
 

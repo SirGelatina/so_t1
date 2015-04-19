@@ -50,6 +50,14 @@ Posicao dos bits nos 16 sinais de controle determinados pela UC
 #define bit_MemRead           0x1000    
 #define bit_MemWrite          0x2000     
 #define bit_MemtoReg          0x4000    
-#define bit_IRWrite           0x8000      
+#define bit_IRWrite           0x8000
+
+// Id de instrucoes
+
+#define op_r_type 0
+#define op_jump 2
+#define op_beq 4
+#define op_lw 35
+#define op_sw 43
 
 #endif

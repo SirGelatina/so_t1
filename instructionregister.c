@@ -1,21 +1,9 @@
 #include "header.h"
 
-struct instruction_register{
-
-	// Input
-	int *input_instruction;
-
-	// Output
-	int output_31_26, output_25_21, output_25_0, output_20_16, output_15_0, output_15_11, output_5_0;
-
-	// pthread_mutex_t
-	pthread_mutex_t input_instruction_m;
-
-};
-
 Instruction_register IR;
 
-void * function_instruction_register(void *){
+void * function_instruction_register(){
+	pthread_mutex_init(&IR.input_instruction_m, NULL);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	IR.input_instruction = &memory.MemData;
@@ -24,9 +12,16 @@ void * function_instruction_register(void *){
 	pthread_barrier_wait(&clocksync);
 
 	while(isRunning){
+		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos pthread_mutex_t da entrada
 		pthread_mutex_lock(&IR.input_instruction_m);
+
+		// Espera pela unidade de controle
+		pthread_mutex_lock(&controlmutex);
+		while(!controlready) // p2
+			pthread_cond_wait(&controlsync, &controlmutex);
+		pthread_mutex_unlock(&controlmutex);
 
 		// If IRWrite == 1
 		if(controlunit.ControlBits & bit_IRWrite != 0){
@@ -40,7 +35,7 @@ void * function_instruction_register(void *){
 		}
 
 		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(&controlunit.output_5_0_m);
+		pthread_mutex_unlock(&controlunit.op_m);
 		pthread_mutex_unlock(&shift_two.input_m);
 		pthread_mutex_unlock(&fileRegister.read_reg1_m);
 		pthread_mutex_unlock(&fileRegister.read_reg2_m);
@@ -53,4 +48,10 @@ void * function_instruction_register(void *){
 		pthread_barrier_wait(&clocksync);	
 
 	}
+
+	if(EXITMESSAGE)
+		printf("FINALIZADO: Registrador de Instrucoes\n");
+    fflush(0);
+
+    pthread_exit(0);
 }
