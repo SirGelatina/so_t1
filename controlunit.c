@@ -1,6 +1,6 @@
 #include "header.h"
 
-// Switchbit e uma funcao macro que ativa (a = 1) ou desativa (b = 0)
+// Switchbit e uma funcao macro que ativa (a = 1) ou desativa (a = 0)
 // os bits 1 da mascara b na variavel var
 
 #define switchbit(var, a, b) var = a ? (var | b) : (var & (~b))
