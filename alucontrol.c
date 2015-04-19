@@ -1,7 +1,5 @@
 #include "header.h"
 
-
-
 Alu_control ALUControl;
 
 void * function_alucontrol(){

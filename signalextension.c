@@ -1,7 +1,5 @@
 #include "header.h"
 
-	
-
 SignalExtend extend;
 
 void * function_signalextend(){

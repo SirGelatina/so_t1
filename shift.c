@@ -1,7 +1,5 @@
 #include "header.h"
 
-	
-
 //Unidades funcionais que representarão os shifts
 Shift shift_one;
 Shift shift_two;

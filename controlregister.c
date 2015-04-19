@@ -1,7 +1,5 @@
 #include "header.h" 
 
-	
-
 // IR e PC não estão inclusos, pois são tratados separadamente (instructionregister.c e pc.c, respectivamente)
 Control_register MDR, A, B, ALUOut; 
 

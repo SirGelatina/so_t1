@@ -1,7 +1,5 @@
 #include "header.h"
 
-	
-
 Concatenator jumpconcat;
 
 void * function_concatenator(){
