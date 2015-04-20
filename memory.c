@@ -30,9 +30,6 @@ void * function_memory(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		printf("Init memory.\n");
-		fflush(0);
-
 		// DOWN nos sem_t das entradas
 		sem_wait(&memory.Address_m);
 		sem_wait(&memory.WriteData_m);
@@ -55,9 +52,6 @@ void * function_memory(){
 		// UP nos sem_t de entrada da unidade que utiliza essa saida
 		sem_post(&IR.input_instruction_m);
 		sem_post(&MDR.input_m);
-
-		printf("Ready memory.\n");
-		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

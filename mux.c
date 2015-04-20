@@ -20,8 +20,6 @@ void * function_mux (void * arg){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		printf("Init mux %s\n", mux->name);
-
 		// DOWN nos sem_t da entrada
 		int i;
 		for(i = 0; i < (mux->input_N); i++)
@@ -32,8 +30,6 @@ void * function_mux (void * arg){
 		while(!controlready) // p2
 			pthread_cond_wait(&controlsync, &controlmutex);
 		pthread_mutex_unlock(&controlmutex);
-
-		printf("Ready mux %s\n", mux->name);
 
 		int bit1, bit0;
 

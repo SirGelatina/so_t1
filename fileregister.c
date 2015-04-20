@@ -45,9 +45,6 @@ void * function_fileregister(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		printf("Init register file\n");
-		fflush(0);
-
 		// DOWN nos mutex da entrada
 		sem_wait(&fileRegister.read_reg1_m);	
 		sem_wait(&fileRegister.read_reg2_m);
@@ -70,9 +67,6 @@ void * function_fileregister(){
 		// UP nos mutex de entrada das unidades que utilizam essas saidas
 		sem_post(&A.input_m);
 		sem_post(&B.input_m);
-
-		printf("Ready register file\n");
-		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

@@ -19,15 +19,9 @@ void * function_control_register(void * arg){
 			sem_post(r->output_m[i]);
 		}
 
-		printf("Init register %s\n", r->name);
-		fflush(0);
-
 		// DOWN no sem_t da entrada
 		sem_wait(&r->input_m);
 		r->buffer = *r->input;
-
-		printf("Ready register %s\n", r->name);
-		fflush(0);
 		
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

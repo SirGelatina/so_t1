@@ -35,7 +35,7 @@ int main(){
 
 		/*	Inicializacao do Mux 1 	*/
 	
-	mux1.input = (int **)malloc(2*(sizeof(int *)));
+	mux1.input = (unsigned int **)malloc(2*(sizeof(unsigned int *)));
 	mux1.input[0] = &PC.output;
 	mux1.input[1] = &ALUOut.output;
 	mux1.mask1 = 0x0000;
@@ -50,7 +50,7 @@ int main(){
 
 		/*	Inicializacao do Mux 2 	*/
 
-	mux2.input = (int **)malloc(2*(sizeof(int *)));
+	mux2.input = (unsigned int **)malloc(2*(sizeof(unsigned int *)));
 	mux2.input[0] = &IR.output_20_16;
 	mux2.input[1] = &IR.output_15_11;
 	mux2.mask1 = 0x0000;
@@ -65,7 +65,7 @@ int main(){
 
 		/*	Inicializacao do Mux 3	*/
 
-	mux3.input = (int **)malloc(2*(sizeof(int *)));
+	mux3.input = (unsigned int **)malloc(2*(sizeof(unsigned int *)));
 	mux3.input[0] = &ALUOut.output;
 	mux3.input[1] = &MDR.output;
 	mux3.mask1 = 0x0000;
@@ -80,7 +80,7 @@ int main(){
 
 		/*	Inicializacao do Mux 4 	*/
 
-	mux4.input = (int **)malloc(2*(sizeof(int *)));
+	mux4.input = (unsigned int **)malloc(2*(sizeof(unsigned int *)));
 	mux4.input[0] = &PC.output;
 	mux4.input[1] = &A.output;
 	mux4.mask1 = 0x0000;
@@ -95,7 +95,7 @@ int main(){
 
 		/*	Inicializacao do Mux 5 	*/
 
-	mux5.input = (int **)malloc(3*(sizeof(int *)));
+	mux5.input = (unsigned int **)malloc(3*(sizeof(unsigned int *)));
 	mux5.input[0] = &ALU.output_alu_result;
 	mux5.input[1] = &ALUOut.output;
 	mux5.input[2] = &shift_two.output;
@@ -113,7 +113,7 @@ int main(){
 
 	int fourconstant = 4;
 
-	mux6.input = (int **)malloc(4*(sizeof(int *)));
+	mux6.input = (unsigned int **)malloc(4*(sizeof(unsigned int *)));
 	mux6.input[0] = &B.output;
 	mux6.input[1] = &fourconstant;
 	mux6.input[2] = &extend.output;

@@ -25,17 +25,11 @@ void * function_pc_register(){
 		sem_post(&mux4.input_m[0]);
 		sem_post(&jumpconcat.input_pc_m);
 
-		printf("Init PC.\n");
-		fflush(0);
-
 		// DOWN nos sem_t da entrada
 		sem_wait(&PC.input_m);
 		sem_wait(&PC.SC_m);
 
 		PC.buffer = *PC.input;
-
-		printf("Ready PC.\n");
-		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

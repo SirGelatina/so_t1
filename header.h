@@ -8,7 +8,7 @@
 #define THREAD_NUMBER 22
 #define MEMSIZE 1024
 
-#define PROGRAMID 0
+#define PROGRAMID 5
 #define REGID 0
 
 #define EXITMESSAGE 1
@@ -35,15 +35,15 @@ extern sem_t temp;
 	typedef struct memory{
 
 		// Input
-		int * Address;
-		int * WriteData;
+		unsigned int * Address;
+		unsigned int * WriteData;
 
 		// Output
-		int MemData;
+		unsigned int MemData;
 		
 		// Auxiliares
-		int * mem;
-		int * modified;
+		unsigned int * mem;
+		unsigned int * modified;
 
 		// sem_t
 		sem_t Address_m;
@@ -59,12 +59,12 @@ extern sem_t temp;
 	typedef struct instruction_register{
 
 		// Input
-		int *input_instruction;
+		unsigned int *input_instruction;
 
-		int buffer;
+		unsigned int buffer;
 
 		// Output
-		int output_31_26, output_25_21, output_25_0, output_20_16, output_15_0, output_15_11, output_5_0;
+		unsigned int output_31_26, output_25_21, output_25_0, output_20_16, output_15_0, output_15_11, output_5_0;
 
 		// sem_t
 		sem_t input_instruction_m;
@@ -79,14 +79,14 @@ extern sem_t temp;
 	typedef struct mux{
 
 		// Input
-		int **input;
+		unsigned int **input;
 
 		// Output
-		int output;
+		unsigned int output;
 
 		// Auxiliares
-		int mask1, mask0; // Mascaras usadas para separar os dois sinais de controle. Caso tenha somente um, mask1 = 0x0000;
-		int input_N; // Numero de entradas do mux
+		unsigned int mask1, mask0; // Mascaras usadas para separar os dois sinais de controle. Caso tenha somente um, mask1 = 0x0000;
+		unsigned int input_N; // Numero de entradas do mux
 
 		// sem_t
 		sem_t * input_m;
@@ -108,10 +108,10 @@ extern sem_t temp;
 	typedef struct or_and{
 
 		// Input
-		int *zero;
+		unsigned int *zero;
 
 		// Output
-		int output;
+		unsigned int output;
 
 		// sem_t
 		sem_t zero_m;
@@ -126,15 +126,15 @@ extern sem_t temp;
 	typedef struct control_register{
 
 		// Input
-		int *input;
+		unsigned int *input;
 
 		// Output
-	    int output;
+	   	unsigned int output;
 
 	    // Auxiliares
-		int n_output; // Número de saídas
+		unsigned int n_output; // Número de saídas
 
-		int buffer;
+		unsigned int buffer;
 		char * name;
 
 		// sem_t	
@@ -154,17 +154,17 @@ extern sem_t temp;
 	typedef struct file_register{
 
 		// Input
-		int *readReg1;
-		int *readReg2;
-		int *writeReg;
-		int *writeData;
+		unsigned int *readReg1;
+		unsigned int *readReg2;
+		unsigned int *writeReg;
+		unsigned int *writeData;
 
 		// Output
-		int readData1;
-		int readData2;
+		unsigned int readData1;
+		unsigned int readData2;
 
 		// Registradores armazenados
-		int reg[32];
+		unsigned int reg[32];
 
 		// sem_t
 		sem_t read_reg1_m;
@@ -182,13 +182,13 @@ extern sem_t temp;
 	typedef struct alu{
 
 		// Input
-		int * input_mux_one;
-		int * input_mux_two;
-		int * input_ALUControl;
+		unsigned int * input_mux_one;
+		unsigned int * input_mux_two;
+		unsigned int * input_ALUControl;
 		
 		// Output
-		int output_alu_result;
-		int output_alu_zero;
+		unsigned int output_alu_result;
+		unsigned int output_alu_zero;
 
 		// sem_t
 		sem_t input_mux_one_m;
@@ -205,10 +205,10 @@ extern sem_t temp;
 	typedef struct alu_control{
 
 		// Input
-		int * input_instruction;
+		unsigned int * input_instruction;
 		
 		// Output
-		int output_alu;
+		unsigned int output_alu;
 
 		// sem_t
 		sem_t input_instruction_m;
@@ -223,10 +223,10 @@ extern sem_t temp;
 	typedef struct shift{
 
 		// Input
-		int * input;
+		unsigned int * input;
 
 		// Output
-		int output;
+		unsigned int output;
 
 		// sem_t
 		sem_t input_m;
@@ -244,12 +244,12 @@ extern sem_t temp;
 	typedef struct pc_register{
 
 		// Input 
-		int *input, *SC;
+		unsigned int *input, *SC;
 
-		int buffer;
+		unsigned int buffer;
 
 		// Output
-	    int output;
+	    unsigned int output;
 
 	    // sem_t
 		sem_t input_m, SC_m;
@@ -264,10 +264,10 @@ extern sem_t temp;
 	typedef struct controlunit{
 
 		// Input
-		int * op;
+		unsigned int * op;
 
 		// Auxiliares
-		int ControlBits;
+		unsigned int ControlBits;
 
 		//sem_t
 		sem_t op_m;
@@ -282,10 +282,10 @@ extern sem_t temp;
 	typedef struct signalextend{
 
 		// Input
-		int * input;
+		unsigned int * input;
 
 		// Output
-		int output;
+		unsigned int output;
 
 		// sem_t
 		sem_t input_m;
@@ -299,11 +299,11 @@ extern sem_t temp;
 	typedef struct concatenator{
 
 		// Input
-		int * input_pc;
-		int * input_shift;
+		unsigned int * input_pc;
+		unsigned int * input_shift;
 		
 		// Output
-		int output;
+		unsigned int output;
 
 		// sem_t
 		sem_t input_pc_m;

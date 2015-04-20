@@ -14,9 +14,6 @@ void * function_or_and(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		printf("Init logic\n");
-		fflush(0);
-
 		// DOWN nos sem_t da entrada
 		sem_wait(&OR_AND.zero_m);
 
@@ -33,9 +30,6 @@ void * function_or_and(){
 
 		// UP nos sem_t de entrada das unidades que utilizam essas saidas
 		sem_post(&PC.SC_m);
-
-		printf("Ready logic\n");
-		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

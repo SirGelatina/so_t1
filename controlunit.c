@@ -67,6 +67,8 @@ int state_registerfetch(){
 
 	int opcode = *controlunit.op;
 
+	printf("OPCODE = %d\n", opcode);
+
 	if(opcode == op_lw || opcode == op_sw)
 		return STATE_computeaddress;
 	else if(opcode == op_r_type)
@@ -185,7 +187,7 @@ int state_execution(){
 	switchbit(controlbits, 1, bit_ALUSrcA);
 	switchbit(controlbits, 0, bit_ALUSrcB0);
 	switchbit(controlbits, 0, bit_ALUSrcB1);
-	switchbit(controlbits, 1, bit_ALUOp0);
+	switchbit(controlbits, 0, bit_ALUOp0);
 	switchbit(controlbits, 1, bit_ALUOp1);
 
 	controlunit.ControlBits = controlbits;
@@ -324,7 +326,7 @@ void * function_controlunit(){
 		}
 
 
-		printf("READY CONTROL\n");
+		printf("READY CONTROL. STATE = %d\n", CurrentState);
 		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
