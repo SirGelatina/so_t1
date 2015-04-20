@@ -63,7 +63,7 @@ const int ProgramDatabase[][MEMSIZE] = {
 		// 0 - 			sw a0, 0(sp)
 		// 4 - 			lw t0, 0(sp) 
 		// 8 - 	fat: 	sub t1 t1 t2
-		// 12 - 		beq t1, zero, fim1
+		// 12 - 		beq t1, t2, fim1
 		// 16 -			add t3, t1, zero 	//aux para t1
 		// 20 -			or t7, t0, t2 		//aux para t0
 		// 24 - mul: 	beq t3, t2, fim2 
@@ -81,7 +81,7 @@ const int ProgramDatabase[][MEMSIZE] = {
 		/*0 */ 0b10101111101001000000000000000000,
 		/*4 */ 0b10001111101010000000000000000000,
 		/*8 */ 0b00000001001010100100100000100010,
-		/*12*/ 0b00010001001000000000000000000111,
+		/*12*/ 0b00010001001010100000000000000111,
 		/*16*/ 0b00000001001000000101100000100000,
 		/*20*/ 0b00000001000010100111100000100101,
 		/*24*/ 0b00010001011010100000000000000011,
@@ -94,6 +94,26 @@ const int ProgramDatabase[][MEMSIZE] = {
 		/*52*/ 0b00000001100000000110000000100100,	
 		/*56*/ 0b11111111111111111111111111111111
 		/*60*/
+
+	},
+	{
+		//10, Multiplicacao
+
+		// # - 			t3 = 2
+		// # - 			t2 = 1
+		// # - 			t0 = t7 = 4
+
+		// 0  - mul: 	beq t3, t2, fim2 
+		// 4  - 	 	add t0 t0 t7
+		// 8  - 	 	sub t3 t3 t2
+		// 12 - 	 	j mul
+		// 16 - fim:
+
+		/*0 */ 0b00010001011010100000000000000011,
+		/*4 */ 0b00000001000011110100000000100000,
+		/*8 */ 0b00000001011010100101100000100010,
+		/*12*/ 0b00001000000000000000000000000000,
+		/*16*/ 0b11111111111111111111111111111111
 
 	}
 };
@@ -125,13 +145,22 @@ void RegisterFile0(int * regfile){
 }
 
 void RegisterFile1(int * regfile){
-	regfile[4]	= 3; 			/* a0 = entrada */
+	regfile[4]	= 4; 			/* a0 = entrada */
 	regfile[9]	= regfile[4]; 	/* t1 = entrada aux */
 	regfile[10]	= 1; 			/* t2 = 1 */
 	regfile[12]	= 100; 			/* t4 = 100 */
 }
 
+void RegisterFile2(int * regfile){
+	// a*b
+	regfile[8]	= 11; // a		
+	regfile[11]	= 10; // b
+	regfile[10]	= 1; 			
+	regfile[15]	= regfile[8]; 			
+}
+
 void (* const InitRegister[])(int *) = {
 	RegisterFile0,
-	RegisterFile1
+	RegisterFile1,
+	RegisterFile2
 };
