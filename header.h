@@ -8,8 +8,8 @@
 #define THREAD_NUMBER 22
 #define MEMSIZE 1024
 
-#define PROGRAMID 1
-#define REGID 0
+#define PROGRAMID 9
+#define REGID 1
 
 #define EXITMESSAGE 1
 
