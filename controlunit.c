@@ -144,9 +144,9 @@ int state_memoryaccess_read(){
 int state_memreadfinish(){
 	int controlbits = 0;
 
-	switchbit(controlbits, 1, bit_RegDst);
+	switchbit(controlbits, 0, bit_RegDst);
 	switchbit(controlbits, 1, bit_RegWrite);
-	switchbit(controlbits, 0, bit_MemtoReg);
+	switchbit(controlbits, 1, bit_MemtoReg);
 
 	controlunit.ControlBits = controlbits;
 
@@ -233,8 +233,8 @@ int state_branchconclusion(){
 	switchbit(controlbits, 1, bit_ALUOp0);
 	switchbit(controlbits, 0, bit_ALUOp1);
 	switchbit(controlbits, 1, bit_PCWriteCond);
-	switchbit(controlbits, 1, bit_PCSource1);
-	switchbit(controlbits, 0, bit_PCSource0);
+	switchbit(controlbits, 1, bit_PCSource0);
+	switchbit(controlbits, 0, bit_PCSource1);
 
 	controlunit.ControlBits = controlbits;
 	// Sinalizando que o controle esta pronto

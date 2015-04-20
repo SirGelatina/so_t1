@@ -33,7 +33,7 @@ void function_output_table(){
 		
 		if(memory.modified[i] == 1){	// Significa que a posição na memória foi alterada
 
-			printf("                           ||     [%5d]     | %5d     ||", i, memory.modified[i]);		
+			printf("                           ||     [%5d]     | %5d     ||", i*4, memory.mem[i]);		
 		}
 	}
 	printf("\n");
