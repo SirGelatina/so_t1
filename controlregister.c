@@ -13,18 +13,21 @@ void * function_control_register(void * arg){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN no pthread_mutex_t da entrada
-		pthread_mutex_lock(&r->input_m);		
-
-		r->output = *r->input;
-
-		// UP no pthread_mutex_t de entrada das unidades que utiliza essa saida
+		// UP no sem_t de entrada das unidades que utiliza essa saida
 		int i;
-		for(i = 0; i < r->n_output; i++)
-			pthread_mutex_unlock(r->output_m[i]);
+		for(i = 0; i < r->n_output; i++){
+			sem_post(r->output_m[i]);
+		}
+
+		// DOWN no sem_t da entrada
+		sem_wait(&r->input_m);		
+		r->buffer = *r->input;
 		
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
+
+		// O conteudo escrito neste ciclo so pode ser lido no proximo!
+		r->output = r->buffer;
 	}
 
 	if(EXITMESSAGE)

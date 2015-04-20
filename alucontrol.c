@@ -5,7 +5,7 @@ Alu_control ALUControl;
 void * function_alucontrol(){
 	int input_alu_op;
 
-	pthread_mutex_init(&ALUControl.input_instruction_m, NULL);
+	sem_init(&ALUControl.input_instruction_m, 0, 0);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	ALUControl.input_instruction = &IR.output_5_0;
@@ -16,8 +16,8 @@ void * function_alucontrol(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN no pthread_mutex_t da entrada
-		pthread_mutex_lock(&ALUControl.input_instruction_m);
+		// DOWN no sem_t da entrada
+		sem_wait(&ALUControl.input_instruction_m);
 
 		// Espera pela unidade de controle
 		pthread_mutex_lock(&controlmutex);
@@ -60,8 +60,8 @@ void * function_alucontrol(){
 			ALUControl.output_alu = 6;
 		}
 
-		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(&ALU.input_ALUControl_m);
+		// UP nos sem_t de entrada das unidades que utilizam essas saidas
+		sem_post(&ALU.input_ALUControl_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

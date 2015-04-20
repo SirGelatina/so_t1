@@ -20,10 +20,10 @@ void * function_mux (void * arg){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN nos pthread_mutex_t da entrada
+		// DOWN nos sem_t da entrada
 		int i;
 		for(i = 0; i < (mux->input_N); i++)
-			pthread_mutex_lock(&mux->input_m[i]);
+			sem_wait(&mux->input_m[i]);
 
 		// Espera pela unidade de controle
 		pthread_mutex_lock(&controlmutex);
@@ -50,8 +50,8 @@ void * function_mux (void * arg){
 		if(bit1 == 1 && bit0 == 0) mux->output = *mux->input[2];
 		if(bit1 == 1 && bit0 == 1) mux->output = *mux->input[3];
 
-		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(mux->output_m);		
+		// UP nos sem_t de entrada das unidades que utilizam essas saidas
+		sem_post(mux->output_m);		
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

@@ -2,12 +2,8 @@
 
 Or_and OR_AND;
 
-extern pthread_cond_t controlsync;
-extern pthread_mutex_t controlmutex;
-extern int controlready;
-
 void * function_or_and(){
-	pthread_mutex_init(&OR_AND.zero_m, NULL);
+	sem_init(&OR_AND.zero_m, 0, 0);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	OR_AND.zero = &ALU.output_alu_zero;
@@ -18,8 +14,8 @@ void * function_or_and(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN nos pthread_mutex_t da entrada
-		pthread_mutex_lock(&OR_AND.zero_m);
+		// DOWN nos sem_t da entrada
+		sem_wait(&OR_AND.zero_m);
 
 		// Espera pela unidade de controle
 		pthread_mutex_lock(&controlmutex);
@@ -39,8 +35,8 @@ void * function_or_and(){
 
 		OR_AND.output = (*OR_AND.zero & *OR_AND.PCWriteCond) | *OR_AND.PCWrite;
 
-		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(&PC.SC_m);
+		// UP nos sem_t de entrada das unidades que utilizam essas saidas
+		sem_post(&PC.SC_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

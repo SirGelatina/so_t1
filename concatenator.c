@@ -4,8 +4,8 @@ Concatenator jumpconcat;
 
 void * function_concatenator(){
 
-	pthread_mutex_init(&jumpconcat.input_pc_m, NULL);
-	pthread_mutex_init(&jumpconcat.input_shift_m, NULL);
+	sem_init(&jumpconcat.input_pc_m, 0, 0);
+	sem_init(&jumpconcat.input_shift_m, 0, 0);
 
 	// Ligacao da entrada dessa unidade funcional com a saida de onde vira os dados
 	jumpconcat.input_pc = &PC.output;
@@ -17,14 +17,14 @@ void * function_concatenator(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN nos pthread_mutex_t da entrada
-		pthread_mutex_lock(&jumpconcat.input_pc_m);
-		pthread_mutex_lock(&jumpconcat.input_shift_m);
+		// DOWN nos sem_t da entrada
+		sem_wait(&jumpconcat.input_pc_m);
+		sem_wait(&jumpconcat.input_shift_m);
 
 		jumpconcat.output = (*jumpconcat.input_pc & 0xf0000000) | (*jumpconcat.input_shift & 0x0fffffff);
 
-		// UP no pthread_mutex_t de entrada da unidade que utiliza essa saida
-		pthread_mutex_unlock(&mux5.input_m[2]);
+		// UP no sem_t de entrada da unidade que utiliza essa saida
+		sem_post(&mux5.input_m[2]);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

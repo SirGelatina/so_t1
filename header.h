@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <semaphore.h>
 
 #include "mask.h"
 
-#define THREAD_NUMBER 20
+#define THREAD_NUMBER 22
 #define MEMSIZE 1024
 
 #define PROGRAMID 0
@@ -21,7 +22,9 @@ extern pthread_mutex_t controlmutex;
 extern int controlready;
 
 extern const int ProgramDatabase[][MEMSIZE];
-extern const int StartingRegisters[][64];
+extern void (* const InitRegister[])(int *);
+
+extern sem_t temp;
 
 	/*
 			Unidades funcionais
@@ -42,9 +45,9 @@ extern const int StartingRegisters[][64];
 		int * mem;
 		int * modified;
 
-		// pthread_mutex_t
-		pthread_mutex_t Address_m;
-		pthread_mutex_t WriteData_m;
+		// sem_t
+		sem_t Address_m;
+		sem_t WriteData_m;
 
 	} Memory;
 
@@ -58,11 +61,13 @@ extern const int StartingRegisters[][64];
 		// Input
 		int *input_instruction;
 
+		int buffer;
+
 		// Output
 		int output_31_26, output_25_21, output_25_0, output_20_16, output_15_0, output_15_11, output_5_0;
 
-		// pthread_mutex_t
-		pthread_mutex_t input_instruction_m;
+		// sem_t
+		sem_t input_instruction_m;
 
 	} Instruction_register;
 
@@ -83,9 +88,9 @@ extern const int StartingRegisters[][64];
 		int mask1, mask0; // Mascaras usadas para separar os dois sinais de controle. Caso tenha somente um, mask1 = 0x0000;
 		int input_N; // Numero de entradas do mux
 
-		// pthread_mutex_t
-		pthread_mutex_t * input_m;
-		pthread_mutex_t * output_m;
+		// sem_t
+		sem_t * input_m;
+		sem_t * output_m;
 
 	} Mux;
 
@@ -108,8 +113,8 @@ extern const int StartingRegisters[][64];
 		// Output
 		int output;
 
-		// pthread_mutex_t
-		pthread_mutex_t zero_m;
+		// sem_t
+		sem_t zero_m;
 
 	} Or_and;
 
@@ -129,9 +134,11 @@ extern const int StartingRegisters[][64];
 	    // Auxiliares
 		int n_output; // Número de saídas
 
-		// pthread_mutex_t	
-		pthread_mutex_t input_m;
-		pthread_mutex_t ** output_m; 	
+		int buffer;
+
+		// sem_t	
+		sem_t input_m;
+		sem_t ** output_m; 	
 
 	} Control_register;
 
@@ -158,11 +165,11 @@ extern const int StartingRegisters[][64];
 		// Registradores armazenados
 		int reg[32];
 
-		// pthread_mutex_t
-		pthread_mutex_t read_reg1_m;
-		pthread_mutex_t read_reg2_m;
-		pthread_mutex_t write_reg_m;
-		pthread_mutex_t write_data_m;
+		// sem_t
+		sem_t read_reg1_m;
+		sem_t read_reg2_m;
+		sem_t write_reg_m;
+		sem_t write_data_m;
 
 	} File_register;
 
@@ -182,10 +189,10 @@ extern const int StartingRegisters[][64];
 		int output_alu_result;
 		int output_alu_zero;
 
-		// pthread_mutex_t
-		pthread_mutex_t input_mux_one_m;
-		pthread_mutex_t input_mux_two_m;
-		pthread_mutex_t input_ALUControl_m;
+		// sem_t
+		sem_t input_mux_one_m;
+		sem_t input_mux_two_m;
+		sem_t input_ALUControl_m;
 
 	} Alu;
 
@@ -202,8 +209,8 @@ extern const int StartingRegisters[][64];
 		// Output
 		int output_alu;
 
-		// pthread_mutex_t
-		pthread_mutex_t input_instruction_m;
+		// sem_t
+		sem_t input_instruction_m;
 
 	} Alu_control;
 
@@ -220,9 +227,9 @@ extern const int StartingRegisters[][64];
 		// Output
 		int output;
 
-		// pthread_mutex_t
-		pthread_mutex_t input_m;
-		pthread_mutex_t * output_m;
+		// sem_t
+		sem_t input_m;
+		sem_t * output_m;
 
 	} Shift;
 
@@ -237,11 +244,13 @@ extern const int StartingRegisters[][64];
 		// Input 
 		int *input, *SC;
 
+		int buffer;
+
 		// Output
 	    int output;
 
-	    // pthread_mutex_t
-		pthread_mutex_t input_m, SC_m;
+	    // sem_t
+		sem_t input_m, SC_m;
 
 	} Pc_register;
 
@@ -258,8 +267,8 @@ extern const int StartingRegisters[][64];
 		// Auxiliares
 		int ControlBits;
 
-		//pthread_mutex_t
-		pthread_mutex_t op_m;
+		//sem_t
+		sem_t op_m;
 		
 	}ControlUnit;
 
@@ -276,8 +285,8 @@ extern const int StartingRegisters[][64];
 		// Output
 		int output;
 
-		// pthread_mutex_t
-		pthread_mutex_t input_m;
+		// sem_t
+		sem_t input_m;
 	} SignalExtend;
 
 	extern SignalExtend extend;
@@ -294,9 +303,9 @@ extern const int StartingRegisters[][64];
 		// Output
 		int output;
 
-		// pthread_mutex_t
-		pthread_mutex_t input_pc_m;
-		pthread_mutex_t input_shift_m;
+		// sem_t
+		sem_t input_pc_m;
+		sem_t input_shift_m;
 
 	} Concatenator;
 

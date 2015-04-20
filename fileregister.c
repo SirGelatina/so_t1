@@ -17,20 +17,17 @@ File_register fileRegister;
 /*------------------------------------------------------------------------------------------------*/
 
 void * function_fileregister(){
-	pthread_mutex_init(&fileRegister.read_reg1_m, NULL);
-	pthread_mutex_init(&fileRegister.read_reg2_m, NULL);
-	pthread_mutex_init(&fileRegister.write_reg_m, NULL);
-	pthread_mutex_init(&fileRegister.write_data_m, NULL);
+	sem_init(&fileRegister.read_reg1_m, 0, 0);
+	sem_init(&fileRegister.read_reg2_m, 0, 0);
+	sem_init(&fileRegister.write_reg_m, 0, 0);
+	sem_init(&fileRegister.write_data_m, 0, 0);
 
 	// Inicialização dos registradores
 	int i;
 	for(i=0; i<32; i++)
 		fileRegister.reg[i] = 0;
 
-	// Atribuindo registradores iniciais
-	int registerAmount = sizeof(StartingRegisters[REGID])>>3;
-	for(i=0; i<registerAmount; i++)
-		fileRegister.reg[ StartingRegisters[REGID][i*2 + 1] ] = StartingRegisters[REGID][i*2];
+	InitRegister[REGID](fileRegister.reg);
 
 	// Inicializando registradores com valor padrao: $zero e $sp
 	fileRegister.reg[0] = 0;
@@ -49,10 +46,10 @@ void * function_fileregister(){
 		pthread_barrier_wait(&clocksync);
 
 		// DOWN nos mutex da entrada
-		pthread_mutex_lock(&fileRegister.read_reg1_m);	
-		pthread_mutex_lock(&fileRegister.read_reg2_m);
-		pthread_mutex_lock(&fileRegister.write_reg_m);
-		pthread_mutex_lock(&fileRegister.write_data_m);	
+		sem_wait(&fileRegister.read_reg1_m);	
+		sem_wait(&fileRegister.read_reg2_m);
+		sem_wait(&fileRegister.write_reg_m);
+		sem_wait(&fileRegister.write_data_m);	
 
 		// Espera pela unidade de controle
 		pthread_mutex_lock(&controlmutex);
@@ -68,8 +65,8 @@ void * function_fileregister(){
 			fileRegister.reg[*fileRegister.writeReg] = *fileRegister.writeData;
 
 		// UP nos mutex de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(&A.input_m);
-		pthread_mutex_unlock(&B.input_m);
+		sem_post(&A.input_m);
+		sem_post(&B.input_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

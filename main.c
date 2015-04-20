@@ -11,46 +11,16 @@ int controlready;
 
 int isRunning;
 
+sem_t temp;
+
 int main(){
 	int i;
 	isRunning = 1;
 
 	pthread_barrier_init(&clocksync, NULL, THREAD_NUMBER);
+	sem_init(&temp, 0, 1);
 
 	/*------------ INICIALIZAÇÃO DAS UNIDADES GENÉRICAS ------------*/
-	
-	// Registradores de controle
-
-	MDR.input = &memory.MemData;
-	MDR.n_output = 1;
-	MDR.output_m = (pthread_mutex_t**)malloc(1*(sizeof(pthread_mutex_t*)));
-	MDR.output_m[0] = &mux3.input_m[1];
-
-	pthread_mutex_init(&MDR.input_m, NULL);
-
-	A.input = &fileRegister.readData1;
-	A.n_output = 1;
-	A.output_m = (pthread_mutex_t**)malloc(1*(sizeof(pthread_mutex_t*)));
-	A.output_m[0] = &mux4.input_m[1];
-
-	pthread_mutex_init(&A.input_m, NULL);
-
-	B.input = &fileRegister.readData2;
-	B.n_output = 2;
-	B.output_m = (pthread_mutex_t**)malloc(2*(sizeof(pthread_mutex_t*)));
-	B.output_m[0] = &mux6.input_m[0];
-	B.output_m[1] = &memory.WriteData_m;
-
-	pthread_mutex_init(&B.input_m, NULL);
-
-	ALUOut.input = &ALU.output_alu_result;
- 	ALUOut.n_output = 2;
- 	ALUOut.output_m = (pthread_mutex_t**)malloc(2*(sizeof(pthread_mutex_t*)));
- 	ALUOut.output_m[0] = &mux1.input_m[1];
- 	ALUOut.output_m[1] = &mux5.input_m[1];
-
-	pthread_mutex_init(&ALUOut.input_m, NULL);
-
 
 	// Mux
 
@@ -73,9 +43,9 @@ int main(){
 	mux1.input_N = 2;
 	mux1.output_m = &memory.Address_m;
 
-	mux1.input_m = (pthread_mutex_t*)malloc(2*sizeof(pthread_mutex_t));
+	mux1.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
-		pthread_mutex_init(&mux1.input_m[i], NULL);
+		sem_init(&mux1.input_m[i], 0, 0);
 
 		/*	Inicializacao do Mux 2 	*/
 
@@ -87,9 +57,9 @@ int main(){
 	mux2.input_N = 2;
 	mux2.output_m = &fileRegister.write_reg_m;
 	
-	mux2.input_m = (pthread_mutex_t*)malloc(2*sizeof(pthread_mutex_t));
+	mux2.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
-		pthread_mutex_init(&mux2.input_m[i], NULL);
+		sem_init(&mux2.input_m[i], 0, 0);
 
 		/*	Inicializacao do Mux 3	*/
 
@@ -101,9 +71,9 @@ int main(){
 	mux3.input_N = 2;
 	mux3.output_m = &fileRegister.write_data_m;
 	
-	mux3.input_m = (pthread_mutex_t*)malloc(2*sizeof(pthread_mutex_t));
+	mux3.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
-		pthread_mutex_init(&mux3.input_m[i], NULL);
+		sem_init(&mux3.input_m[i], 0, 0);
 
 		/*	Inicializacao do Mux 4 	*/
 
@@ -115,9 +85,9 @@ int main(){
 	mux4.input_N = 2;
 	mux4.output_m = &ALU.input_mux_one_m;
 	
-	mux4.input_m = (pthread_mutex_t*)malloc(2*sizeof(pthread_mutex_t));
+	mux4.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
-		pthread_mutex_init(&mux4.input_m[i], NULL);
+		sem_init(&mux4.input_m[i], 0, 0);
 
 		/*	Inicializacao do Mux 5 	*/
 
@@ -130,9 +100,9 @@ int main(){
 	mux5.input_N = 3;
 	mux5.output_m = &PC.input_m;
 	
-	mux5.input_m = (pthread_mutex_t*)malloc(3*sizeof(pthread_mutex_t));
+	mux5.input_m = (sem_t*)malloc(3*sizeof(sem_t));
 	for(i=0; i<2; i++)
-		pthread_mutex_init(&mux5.input_m[i], NULL);
+		sem_init(&mux5.input_m[i], 0, 0);
 
 		/*	Inicializacao do Mux 6 	*/
 
@@ -148,23 +118,60 @@ int main(){
 	mux6.input_N = 4;
 	mux6.output_m = &ALU.input_mux_two_m;
 	
-	mux6.input_m = (pthread_mutex_t*)malloc(4*sizeof(pthread_mutex_t));
+	mux6.input_m = (sem_t*)malloc(4*sizeof(sem_t));
 	for(i=0; i<2; i++)
-		pthread_mutex_init(&mux6.input_m[i], NULL);
+		sem_init(&mux6.input_m[i], 0, 0);
+	
+	// Registradores de controle
+
+	MDR.input = &memory.MemData;
+	MDR.n_output = 1;
+	MDR.output_m = (sem_t**)malloc(1*(sizeof(sem_t*)));
+	MDR.output_m[0] = &mux3.input_m[1];
+
+	sem_init(&MDR.input_m, 0, 0);
+
+	A.input = &fileRegister.readData1;
+	A.n_output = 1;
+	A.output_m = (sem_t**)malloc(1*(sizeof(sem_t*)));
+	A.output_m[0] = &mux4.input_m[1];
+
+	sem_init(&A.input_m, 0, 0);
+
+	B.input = &fileRegister.readData2;
+	B.n_output = 2;
+	B.output_m = (sem_t**)malloc(2*(sizeof(sem_t*)));
+	B.output_m[0] = &mux6.input_m[0];
+	B.output_m[1] = &memory.WriteData_m;
+
+	sem_init(&B.input_m, 0, 0);
+
+	ALUOut.input = &ALU.output_alu_result;
+ 	ALUOut.n_output = 2;
+ 	ALUOut.output_m = (sem_t**)malloc(2*(sizeof(sem_t*)));
+ 	ALUOut.output_m[0] = &mux1.input_m[1];
+ 	ALUOut.output_m[1] = &mux5.input_m[1];
+
+	sem_init(&ALUOut.input_m, 0, 0);
+
+	printf("Register %p: MDR\n", &MDR);
+	printf("Register %p: A\n", &A);
+	printf("Register %p: B\n", &B);
+	printf("Register %p: ALUOut\n", &ALUOut);
 
 		/*	Inicializacao do Shift Left 2 #1 	*/
 
 	shift_one.input = &extend.output;
 	shift_one.output_m = &mux6.input_m[3];
 
-	pthread_mutex_init(&shift_one.input_m, NULL);
+	sem_init(&shift_one.input_m, 0, 0);
 
 		/*	Inicializacao do Shift Left 2 #2 	*/
 
 	shift_two.input = &IR.output_25_0;
 	shift_two.output_m = &jumpconcat.input_shift_m;
 
-	pthread_mutex_init(&shift_two.input_m, NULL);
+	sem_init(&shift_two.input_m, 0, 0);
 
 		/*
 			Criando as threads
@@ -203,12 +210,18 @@ int main(){
 	pthread_create(threadArray + size++, NULL, function_control_register, (void *) &A);
 	pthread_create(threadArray + size++, NULL, function_control_register, (void *) &B);
 
-		/*
+	/*
 			Aguardando o fim da execucao das threads
 														*/
 
-	for(i=0; i<size; i++)
-		pthread_join(threadArray[i], NULL);
+	for(i=0; i<THREAD_NUMBER; i++)
+		pthread_join(threadArray[i], 0);
+
+	printf("Ended!\n");
+
+	char c;
+	scanf("%c", &c);
+		/*
 
 		/*
 			Imprimindo o resultado da memoria e registradores

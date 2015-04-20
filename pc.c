@@ -3,8 +3,8 @@
 Pc_register PC;
 
 void * function_pc_register(){
-	pthread_mutex_init(&PC.input_m, NULL);
-	pthread_mutex_init(&PC.SC_m, NULL);
+	sem_init(&PC.input_m, 0, 0);
+	sem_init(&PC.SC_m, 0, 0);
 
 	// Inicialização de PC
 	PC.output = 0;
@@ -20,19 +20,21 @@ void * function_pc_register(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN nos pthread_mutex_t da entrada
-		pthread_mutex_lock(&PC.input_m);
-		pthread_mutex_lock(&PC.SC_m);
+		// UP nos sem_t de entrada das unidades que utilizam essas saidas
+		sem_post(&mux1.input_m[0]);
+		sem_post(&mux4.input_m[1]);
+		sem_post(&jumpconcat.input_pc_m);
 
-		if(*PC.SC == 1) PC.output = *PC.input;
+		// DOWN nos sem_t da entrada
+		sem_wait(&PC.input_m);
+		sem_wait(&PC.SC_m);
 
-		// UP nos pthread_mutex_t de entrada das unidades que utilizam essas saidas
-		pthread_mutex_unlock(&mux1.input_m[0]);
-		pthread_mutex_unlock(&mux4.input_m[1]);
-		pthread_mutex_unlock(&jumpconcat.input_pc_m);
+		PC.buffer = *PC.input;
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
+
+		if(*PC.SC == 1) PC.output = PC.buffer;
 	}
 
 	if(EXITMESSAGE)

@@ -14,13 +14,13 @@ void * function_shift(void * arg){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN no pthread_mutex_t da entrada
-		pthread_mutex_lock(&shiftunit->input_m);
+		// DOWN no sem_t da entrada
+		sem_wait(&shiftunit->input_m);
 
 		shiftunit->output = (*shiftunit->input) << 2;
 
-		// UP nos pthread_mutex_t de entrada da unidade que utiliza essa saida
-		pthread_mutex_unlock(shiftunit->output_m);
+		// UP nos sem_t de entrada da unidade que utiliza essa saida
+		sem_post(shiftunit->output_m);
 		
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

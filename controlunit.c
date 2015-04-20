@@ -39,15 +39,9 @@ int state_instructionfetch(){
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
-	
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_registerfetch;
 }
@@ -67,15 +61,9 @@ int state_registerfetch(){
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
-	
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	int opcode = *controlunit.op;
 
@@ -112,15 +100,9 @@ int state_computeaddress(){
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
-	
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	int opcode = *controlunit.op;
 
@@ -150,15 +132,9 @@ int state_memoryaccess_read(){
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
-	
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_memreadfinish;
 }
@@ -176,15 +152,9 @@ int state_memreadfinish(){
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
-	
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -197,11 +167,6 @@ int state_memoryaccess_write(){
 
 	controlunit.ControlBits = controlbits;
 
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
-	
 
 	// Sinalizando que o controle esta pronto
 	pthread_mutex_lock(&controlmutex);
@@ -209,7 +174,7 @@ int state_memoryaccess_write(){
 	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -225,11 +190,6 @@ int state_execution(){
 
 	controlunit.ControlBits = controlbits;
 
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
-	
 
 	// Sinalizando que o controle esta pronto
 	pthread_mutex_lock(&controlmutex);
@@ -237,7 +197,7 @@ int state_execution(){
 	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_Rconclusion;
 }
@@ -255,14 +215,9 @@ int state_Rconclusion(){
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
-	
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -280,20 +235,13 @@ int state_branchconclusion(){
 	switchbit(controlbits, 0, bit_PCSource0);
 
 	controlunit.ControlBits = controlbits;
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
-	
-
 	// Sinalizando que o controle esta pronto
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -306,20 +254,14 @@ int state_jumpconclusion(){
 	switchbit(controlbits, 1, bit_PCSource1);
 
 	controlunit.ControlBits = controlbits;
-
-	// Sinalizando que o controle esta pronto
-	pthread_mutex_lock(&controlmutex);
-	controlready = 1;
-	pthread_cond_broadcast(&controlsync);
 	
-
 	// Sinalizando que o controle esta pronto
 	pthread_mutex_lock(&controlmutex);
 	controlready = 1;
 	pthread_cond_broadcast(&controlsync);
 	pthread_mutex_unlock(&controlmutex);
 
-	pthread_mutex_lock(&controlunit.op_m);
+	sem_wait(&controlunit.op_m);
 
 	return STATE_instructionfetch;
 }
@@ -331,10 +273,10 @@ void * function_controlunit(){
 	pthread_cond_init(&controlsync, NULL);
 	controlready = 0;
 
-	pthread_mutex_init(&controlunit.op_m, NULL);
+	sem_init(&controlunit.op_m, 0, 0);
 
 	// Ligacao da entrada dessa unidade funcional com a saída de onde virá os dados
-	controlunit.op = &IR.output_5_0;
+	controlunit.op = &IR.output_31_26;
 
 	int (* StateArray[])() = {
 		state_instructionfetch,
@@ -354,8 +296,17 @@ void * function_controlunit(){
 	// Barreira para sincronizar na inicializacao de todas threads
 	pthread_barrier_wait(&clocksync);
 
+	int clockn = 0;
+
 	while(isRunning){
+
+		printf("pre\n");
+    	fflush(0);
+
 		pthread_barrier_wait(&clocksync);
+
+		printf("Clock #%d\n", clockn);
+    	fflush(0);
 
 		// O mux 6 recebe uma constante. Devido a implementacao
 		// do mux generico, cada entrada tem um mutex, que diz
@@ -364,18 +315,21 @@ void * function_controlunit(){
 		// funcional, e necessario dar unlock em seu mutex a cada ciclo.
 		// Esse unlock foi arbitrariamente designado responsabilidade
 		// da funcao que gerencia a unidade de controle.
-		pthread_mutex_unlock(&mux6.input_m[2]);
+		sem_post(&mux6.input_m[2]);
 
 		CurrentState = StateArray[CurrentState]();
+
+		// Barreira para sincronizar no ciclo de clock atual
+		pthread_barrier_wait(&clocksync);
 
 		// Resetando para falso a variavel que diz que o controle nao esta pronto
 		pthread_mutex_lock(&controlmutex);
 		controlready = 0;
 		pthread_mutex_unlock(&controlmutex);
-
-		// Barreira para sincronizar no ciclo de clock atual
-		pthread_barrier_wait(&clocksync);
 	}
+		printf("????");
+    	fflush(0);
+		
 
 	if(EXITMESSAGE)
 		printf("FINALIZADO: Unidade de Controle\n");

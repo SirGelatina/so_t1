@@ -72,40 +72,41 @@ const int ProgramDatabase[][MEMSIZE] = {
 	}
 };
 
-const int StartingRegisters[][64] = { 
+/*------------------------------------------------------------------------------------------------*/ 
+//	         Correspondência entre registradores e posicao no vetor 'reg' de File_register     
+//
+//     ||     $zero | 0     ||     $t0   | 8     ||     $s0   | 16    ||     $t8   | 24    ||              
+//     ||     $at   | 1     ||     $t1   | 9     ||     $s1   | 17    ||     $t9   | 25    || 
+//     ||     $v0   | 2     ||	   $t2   | 10    ||     $s2   | 18    ||     $k0   | 26    || 
+//     ||     $v1   | 3     ||     $t3   | 11    ||     $s3   | 19    ||     $k1   | 27    || 
+//     ||     $a0   | 4     ||     $t4   | 12    ||     $s4   | 20    ||     $gp   | 28    || 
+//     ||     $a1   | 5     ||     $t5   | 13    ||     $s5   | 21    ||     $sp   | 29    || 
+//     ||     $a2   | 6     ||     $t6   | 14    ||     $s6   | 22    ||     $fp   | 30    || 
+//     ||     $a3   | 7     ||     $t7   | 15    ||     $s7   | 23    ||     $ra   | 31    || 
+// 	  	    	
+/*------------------------------------------------------------------------------------------------*/
 
-	/*
+void RegisterFile0(int * regfile){
+	regfile[6]	= 1; /* a2 = 1 */	
+	regfile[7]	= 2;/* a3 = 2 */	
+	regfile[8]	= 3; /* t0 = 3 */	
+	regfile[14]	= 4; /* t6 = 4 */	
+	regfile[15]	= 5; /* t7 = 5 */	
+	regfile[19]	= 6; /* s3 = 6 */	
+	regfile[21]	= 7; /* s5 = 7 */	
+	regfile[22]	= 8; /* s6 = 8 */	
+	regfile[23]	= 9; /* s7 = 9 */
+}
 
-	{
-	
-		id do registrador, valor do registrador,
+void RegisterFile1(int * regfile){
+	regfile[4]	= 6; /* a0 = 6 */
+	regfile[9]	= 6; /* t1 = 6 */
+	regfile[10]	= 1; /* t2 = 1 */
+	regfile[11]	= 0; /* t3 = 0 */
+	regfile[12]	= 100; /* t4 = 100 */
+}
 
-	}
-
-	*/
-
-	{ // Instrucoes unicas
-
-		6, 1, /* a2 = 1 */	
-		7, 2, /* a3 = 2 */	
-		8, 3, /* t0 = 3 */	
-		14, 4, /* t6 = 4 */	
-		15, 5, /* t7 = 5 */	
-		19, 6, /* s3 = 6 */	
-		21, 7, /* s5 = 7 */	
-		22, 8, /* s6 = 8 */	
-		23, 9, /* s7 = 9 */	
-
-	},
-
-	{ // Fatorial
-
-		4, 6, /* a0 = 6 */
-		9, 6, /* t1 = 6 */
-		10, 1, /* t2 = 1 */
-		11, 0, /* t3 = 0 */
-		12, 100 /* t4 = 100 */
-
-	}
-
+void (* const InitRegister[])(int *) = {
+	RegisterFile0,
+	RegisterFile1
 };

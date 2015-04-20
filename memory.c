@@ -3,8 +3,8 @@
 Memory memory;
 
 void * function_memory(){
-	pthread_mutex_init(&memory.Address_m, NULL);
-	pthread_mutex_init(&memory.WriteData_m, NULL);
+	sem_init(&memory.Address_m, 0, 0);
+	sem_init(&memory.WriteData_m, 0, 0);
 
 	int i;
 
@@ -30,9 +30,9 @@ void * function_memory(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
-		// DOWN nos pthread_mutex_t das entradas
-		pthread_mutex_lock(&memory.Address_m);
-		pthread_mutex_lock(&memory.WriteData_m);
+		// DOWN nos sem_t das entradas
+		sem_wait(&memory.Address_m);
+		sem_wait(&memory.WriteData_m);
 
 		// Espera pela unidade de controle
 		pthread_mutex_lock(&controlmutex);
@@ -47,9 +47,9 @@ void * function_memory(){
 			memory.modified[*memory.Address] = 1;
 		}
 
-		// UP nos pthread_mutex_t de entrada da unidade que utiliza essa saida
-		pthread_mutex_unlock(&IR.input_instruction_m);
-		pthread_mutex_unlock(&MDR.input_m);
+		// UP nos sem_t de entrada da unidade que utiliza essa saida
+		sem_post(&IR.input_instruction_m);
+		sem_post(&MDR.input_m);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
