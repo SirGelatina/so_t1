@@ -17,6 +17,9 @@ void * function_concatenator(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
+		printf("Init concat\n");
+		fflush(0);
+
 		// DOWN nos sem_t da entrada
 		sem_wait(&jumpconcat.input_pc_m);
 		sem_wait(&jumpconcat.input_shift_m);
@@ -25,6 +28,9 @@ void * function_concatenator(){
 
 		// UP no sem_t de entrada da unidade que utiliza essa saida
 		sem_post(&mux5.input_m[2]);
+
+		printf("Ready concat\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

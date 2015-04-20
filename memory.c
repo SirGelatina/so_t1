@@ -15,7 +15,7 @@ void * function_memory(){
 		memory.modified[i] = 0;
 
 	int instructionAmount = sizeof(ProgramDatabase[PROGRAMID])>>2;
-
+	printf("AMOUNT %d\n", instructionAmount);
 	// Escrevendo o programa (presente em code.c) na memoria
 	for(i=0; i<instructionAmount; i++)
 		memory.mem[i] = ProgramDatabase[PROGRAMID][i];
@@ -30,6 +30,9 @@ void * function_memory(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
+		printf("Init memory.\n");
+		fflush(0);
+
 		// DOWN nos sem_t das entradas
 		sem_wait(&memory.Address_m);
 		sem_wait(&memory.WriteData_m);
@@ -40,16 +43,21 @@ void * function_memory(){
 			pthread_cond_wait(&controlsync, &controlmutex);
 		pthread_mutex_unlock(&controlmutex);
 
-		if(controlunit.ControlBits & bit_MemRead)
-			memory.MemData = memory.mem[*memory.Address];
-		else if(controlunit.ControlBits & bit_MemWrite){
-			memory.mem[*memory.Address] = *memory.WriteData;
-			memory.modified[*memory.Address] = 1;
+		if(controlunit.ControlBits & bit_MemRead){
+			memory.MemData = memory.mem[(*memory.Address)>>2];
+			printf("\t\tMemData = %x\n", memory.MemData);
+			fflush(0);
+		}else if(controlunit.ControlBits & bit_MemWrite){
+			memory.mem[*memory.Address>>2] = *memory.WriteData;
+			memory.modified[*memory.Address>>2] = 1;
 		}
 
 		// UP nos sem_t de entrada da unidade que utiliza essa saida
 		sem_post(&IR.input_instruction_m);
 		sem_post(&MDR.input_m);
+
+		printf("Ready memory.\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

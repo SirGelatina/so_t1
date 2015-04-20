@@ -19,6 +19,9 @@ void * function_alu(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
+		printf("Init ALU\n");
+		fflush(0);
+
 		// DOWN nos sem_t da entrada
 		sem_wait(&ALU.input_mux_one_m);
 		sem_wait(&ALU.input_mux_two_m);
@@ -74,6 +77,9 @@ void * function_alu(){
 		sem_post(&ALUOut.input_m);
 		sem_post(&OR_AND.zero_m);
 		sem_post(&mux5.input_m[0]);
+
+		printf("Ready ALU\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

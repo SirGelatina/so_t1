@@ -13,6 +13,9 @@ void * function_signalextend(){
 
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
+
+		printf("Init extend\n");
+		fflush(0);
 		
 		// DOWN nos sem_t da entrada
 		sem_wait(&extend.input_m);
@@ -27,6 +30,9 @@ void * function_signalextend(){
 		// UP nos sem_t de entrada das unidades que utilizam essas saidas
 		sem_post(&shift_one.input_m);
 		sem_post(&mux6.input_m[2]);
+
+		printf("Ready extend\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

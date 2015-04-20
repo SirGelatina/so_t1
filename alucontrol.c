@@ -16,6 +16,9 @@ void * function_alucontrol(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
+		printf("Init ALUControl\n");
+		fflush(0);
+
 		// DOWN no sem_t da entrada
 		sem_wait(&ALUControl.input_instruction_m);
 
@@ -62,6 +65,9 @@ void * function_alucontrol(){
 
 		// UP nos sem_t de entrada das unidades que utilizam essas saidas
 		sem_post(&ALU.input_ALUControl_m);
+
+		printf("Ready ALUControl\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

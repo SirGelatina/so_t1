@@ -24,6 +24,9 @@ void * function_instruction_register(){
 		sem_post(&extend.input_m);
 		sem_post(&ALUControl.input_instruction_m);
 
+		printf("Init IR\n");
+		fflush(0);
+
 		// DOWN nos sem_t da entrada
 		sem_wait(&IR.input_instruction_m);
 
@@ -34,6 +37,9 @@ void * function_instruction_register(){
 		pthread_mutex_unlock(&controlmutex);
 
 		IR.buffer = *IR.input_instruction;
+
+		printf("Ready IR\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);	

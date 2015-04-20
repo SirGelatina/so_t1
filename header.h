@@ -92,6 +92,7 @@ extern sem_t temp;
 		sem_t * input_m;
 		sem_t * output_m;
 
+		char * name;
 	} Mux;
 
 	extern Mux mux1;
@@ -108,7 +109,6 @@ extern sem_t temp;
 
 		// Input
 		int *zero;
-		int *PCWriteCond, *PCWrite;
 
 		// Output
 		int output;
@@ -135,6 +135,7 @@ extern sem_t temp;
 		int n_output; // Número de saídas
 
 		int buffer;
+		char * name;
 
 		// sem_t	
 		sem_t input_m;
@@ -231,6 +232,7 @@ extern sem_t temp;
 		sem_t input_m;
 		sem_t * output_m;
 
+		char * name;
 	} Shift;
 
 	extern Shift shift_one;

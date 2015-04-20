@@ -42,6 +42,7 @@ int main(){
 	mux1.mask0 = bit_IorD;
 	mux1.input_N = 2;
 	mux1.output_m = &memory.Address_m;
+	mux1.name = "mux 1";
 
 	mux1.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
@@ -56,6 +57,7 @@ int main(){
 	mux2.mask0 = bit_RegDst;
 	mux2.input_N = 2;
 	mux2.output_m = &fileRegister.write_reg_m;
+	mux2.name = "mux 2";
 	
 	mux2.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
@@ -70,6 +72,7 @@ int main(){
 	mux3.mask0 = bit_MemtoReg;
 	mux3.input_N = 2;
 	mux3.output_m = &fileRegister.write_data_m;
+	mux3.name = "mux 3";
 	
 	mux3.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
@@ -84,6 +87,7 @@ int main(){
 	mux4.mask0 = bit_ALUSrcA;
 	mux4.input_N = 2;
 	mux4.output_m = &ALU.input_mux_one_m;
+	mux4.name = "mux 4";
 	
 	mux4.input_m = (sem_t*)malloc(2*sizeof(sem_t));
 	for(i=0; i<2; i++)
@@ -99,6 +103,7 @@ int main(){
 	mux5.mask0 = bit_PCSource0;
 	mux5.input_N = 3;
 	mux5.output_m = &PC.input_m;
+	mux5.name = "mux 5";
 	
 	mux5.input_m = (sem_t*)malloc(3*sizeof(sem_t));
 	for(i=0; i<2; i++)
@@ -117,6 +122,7 @@ int main(){
 	mux6.mask0 = bit_ALUSrcB0;
 	mux6.input_N = 4;
 	mux6.output_m = &ALU.input_mux_two_m;
+	mux6.name = "mux 6";
 	
 	mux6.input_m = (sem_t*)malloc(4*sizeof(sem_t));
 	for(i=0; i<2; i++)
@@ -128,6 +134,7 @@ int main(){
 	MDR.n_output = 1;
 	MDR.output_m = (sem_t**)malloc(1*(sizeof(sem_t*)));
 	MDR.output_m[0] = &mux3.input_m[1];
+	MDR.name = "MDR";
 
 	sem_init(&MDR.input_m, 0, 0);
 
@@ -135,6 +142,7 @@ int main(){
 	A.n_output = 1;
 	A.output_m = (sem_t**)malloc(1*(sizeof(sem_t*)));
 	A.output_m[0] = &mux4.input_m[1];
+	A.name = "A";
 
 	sem_init(&A.input_m, 0, 0);
 
@@ -143,26 +151,25 @@ int main(){
 	B.output_m = (sem_t**)malloc(2*(sizeof(sem_t*)));
 	B.output_m[0] = &mux6.input_m[0];
 	B.output_m[1] = &memory.WriteData_m;
+	B.name = "B";
 
 	sem_init(&B.input_m, 0, 0);
 
 	ALUOut.input = &ALU.output_alu_result;
- 	ALUOut.n_output = 2;
- 	ALUOut.output_m = (sem_t**)malloc(2*(sizeof(sem_t*)));
+ 	ALUOut.n_output = 3;
+ 	ALUOut.output_m = (sem_t**)malloc(3*(sizeof(sem_t*)));
  	ALUOut.output_m[0] = &mux1.input_m[1];
  	ALUOut.output_m[1] = &mux5.input_m[1];
+ 	ALUOut.output_m[2] = &mux3.input_m[0];
+	ALUOut.name = "ALUOut";
 
 	sem_init(&ALUOut.input_m, 0, 0);
-
-	printf("Register %p: MDR\n", &MDR);
-	printf("Register %p: A\n", &A);
-	printf("Register %p: B\n", &B);
-	printf("Register %p: ALUOut\n", &ALUOut);
 
 		/*	Inicializacao do Shift Left 2 #1 	*/
 
 	shift_one.input = &extend.output;
 	shift_one.output_m = &mux6.input_m[3];
+	shift_one.name = "shift 1";
 
 	sem_init(&shift_one.input_m, 0, 0);
 
@@ -170,6 +177,7 @@ int main(){
 
 	shift_two.input = &IR.output_25_0;
 	shift_two.output_m = &jumpconcat.input_shift_m;
+	shift_two.name = "shift 2";
 
 	sem_init(&shift_two.input_m, 0, 0);
 
@@ -218,6 +226,8 @@ int main(){
 		pthread_join(threadArray[i], 0);
 
 	printf("Ended!\n");
+
+	function_output_table();
 
 	char c;
 	scanf("%c", &c);

@@ -14,6 +14,9 @@ void * function_shift(void * arg){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
+		printf("Init %s.\n", shiftunit->name);
+		fflush(0);
+
 		// DOWN no sem_t da entrada
 		sem_wait(&shiftunit->input_m);
 
@@ -21,6 +24,9 @@ void * function_shift(void * arg){
 
 		// UP nos sem_t de entrada da unidade que utiliza essa saida
 		sem_post(shiftunit->output_m);
+
+		printf("Ready %s.\n", shiftunit->name);
+		fflush(0);
 		
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

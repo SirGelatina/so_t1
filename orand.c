@@ -14,6 +14,9 @@ void * function_or_and(){
 	while(isRunning){
 		pthread_barrier_wait(&clocksync);
 
+		printf("Init logic\n");
+		fflush(0);
+
 		// DOWN nos sem_t da entrada
 		sem_wait(&OR_AND.zero_m);
 
@@ -23,20 +26,16 @@ void * function_or_and(){
 			pthread_cond_wait(&controlsync, &controlmutex);
 		pthread_mutex_unlock(&controlmutex);
 
-		if (controlunit.ControlBits & bit_PCWriteCond)
-			*OR_AND.PCWriteCond = 1;
-		else 
-			*OR_AND.PCWriteCond = 0;
+		int PCWriteCond = controlunit.ControlBits & bit_PCWriteCond;
+		int PCWrite = controlunit.ControlBits & bit_PCWrite;
 
-		if (controlunit.ControlBits & bit_PCWrite)
-			*OR_AND.PCWrite = 1;
-		else 
-			*OR_AND.PCWrite = 0;
-
-		OR_AND.output = (*OR_AND.zero & *OR_AND.PCWriteCond) | *OR_AND.PCWrite;
+		OR_AND.output = (*OR_AND.zero && PCWriteCond) || PCWrite;
 
 		// UP nos sem_t de entrada das unidades que utilizam essas saidas
 		sem_post(&PC.SC_m);
+
+		printf("Ready logic\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);

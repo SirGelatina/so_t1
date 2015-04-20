@@ -299,13 +299,9 @@ void * function_controlunit(){
 	int clockn = 0;
 
 	while(isRunning){
-
-		printf("pre\n");
-    	fflush(0);
-
 		pthread_barrier_wait(&clocksync);
 
-		printf("Clock #%d\n", clockn);
+		printf("Clock #%d. PC = %d\n", clockn++, PC.output);
     	fflush(0);
 
 		// O mux 6 recebe uma constante. Devido a implementacao
@@ -315,9 +311,21 @@ void * function_controlunit(){
 		// funcional, e necessario dar unlock em seu mutex a cada ciclo.
 		// Esse unlock foi arbitrariamente designado responsabilidade
 		// da funcao que gerencia a unidade de controle.
-		sem_post(&mux6.input_m[2]);
+		sem_post(&mux6.input_m[1]);
 
-		CurrentState = StateArray[CurrentState]();
+		char c;
+		if(CurrentState == STATE_registerfetch){
+			CurrentState = StateArray[CurrentState]();
+			//printf("\tNew state = %d\n", CurrentState);
+			//scanf("%c", &c);
+		}else{
+			CurrentState = StateArray[CurrentState]();
+			//printf("\tNew state = %d\n", CurrentState);
+		}
+
+
+		printf("READY CONTROL\n");
+		fflush(0);
 
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
