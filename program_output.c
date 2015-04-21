@@ -37,5 +37,5 @@ void function_output_table(){
 		}
 	}
 	printf("\n");
-	printf("\033[22;30m\n");
+	printf("\x1B[0m\n");
 }
