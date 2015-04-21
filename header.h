@@ -10,8 +10,9 @@
 
 #define PROGRAMID 9
 #define REGID 1
+#define MEMID 0
 
-#define EXITMESSAGE 1
+#define EXITMESSAGE 0
 
 extern int isRunning;
 
@@ -22,6 +23,7 @@ extern pthread_mutex_t controlmutex;
 extern int controlready;
 
 extern const int ProgramDatabase[][MEMSIZE];
+extern void (* const InitMemory[])(int *);
 extern void (* const InitRegister[])(int *);
 
 extern sem_t temp;

@@ -15,10 +15,11 @@ void * function_memory(){
 		memory.modified[i] = 0;
 
 	int instructionAmount = sizeof(ProgramDatabase[PROGRAMID])>>2;
-	printf("AMOUNT %d\n", instructionAmount);
 	// Escrevendo o programa (presente em code.c) na memoria
 	for(i=0; i<instructionAmount; i++)
 		memory.mem[i] = ProgramDatabase[PROGRAMID][i];
+
+	InitMemory[MEMID](memory.mem + MEMSIZE);
 
 	// Ligacao das entradas dessa unidade funcional com as saidas de onde vira os dados
 	memory.Address = &mux1.output;
@@ -42,8 +43,6 @@ void * function_memory(){
 
 		if(controlunit.ControlBits & bit_MemRead){
 			memory.MemData = memory.mem[(*memory.Address)>>2];
-			printf("\t\tMemData = %x\n", memory.MemData);
-			fflush(0);
 		}else if(controlunit.ControlBits & bit_MemWrite){
 			memory.mem[*memory.Address>>2] = *memory.WriteData;
 			memory.modified[*memory.Address>>2] = 1;

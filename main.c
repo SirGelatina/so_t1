@@ -225,8 +225,6 @@ int main(){
 	for(i=0; i<THREAD_NUMBER; i++)
 		pthread_join(threadArray[i], 0);
 
-	printf("Ended!\n");
-
 	function_output_table();
 
 	char c;

@@ -67,8 +67,6 @@ int state_registerfetch(){
 
 	int opcode = *controlunit.op;
 
-	printf("OPCODE = %d\n", opcode);
-
 	if(opcode == op_lw || opcode == op_sw)
 		return STATE_computeaddress;
 	else if(opcode == op_r_type)
@@ -325,10 +323,6 @@ void * function_controlunit(){
 			//printf("\tNew state = %d\n", CurrentState);
 		}
 
-
-		printf("READY CONTROL. STATE = %d\n", CurrentState);
-		fflush(0);
-
 		// Barreira para sincronizar no ciclo de clock atual
 		pthread_barrier_wait(&clocksync);
 
@@ -337,9 +331,6 @@ void * function_controlunit(){
 		controlready = 0;
 		pthread_mutex_unlock(&controlmutex);
 	}
-		printf("????");
-    	fflush(0);
-		
 
 	if(EXITMESSAGE)
 		printf("FINALIZADO: Unidade de Controle\n");

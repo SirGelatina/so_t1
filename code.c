@@ -129,6 +129,18 @@ const int ProgramDatabase[][MEMSIZE] = {
 	}
 };
 
+	/*
+		Usado para inicializar a memoria
+											*/
+
+void InitMemory0(int * memory){
+
+}
+
+void (* const InitMemory[])(int *) = {
+	InitMemory0
+};
+
 /*------------------------------------------------------------------------------------------------*/ 
 //	         Correspondência entre registradores e posicao no vetor 'reg' de File_register     
 //
@@ -142,6 +154,10 @@ const int ProgramDatabase[][MEMSIZE] = {
 //     ||     $a3   | 7     ||     $t7   | 15    ||     $s7   | 23    ||     $ra   | 31    || 
 // 	  	    	
 /*------------------------------------------------------------------------------------------------*/
+
+	/*
+		Usado para inicializar registradores
+												*/
 
 void RegisterFile0(int * regfile){
 	regfile[6]	= 1; /* a2 = 1 */	
